@@ -36,5 +36,5 @@ Other NPM scripts:
 
 ## Deploy
 
-This app can be deployed to anywhere that can host a static web app. It is currently running on http://www.render.com and deployed via github. `npm run deploy` is used as the build script afer deployment.
+This app can be deployed to anywhere that can host a static web app. It is currently running on Google Cloud Platform.
 
