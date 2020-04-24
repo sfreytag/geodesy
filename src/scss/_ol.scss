@@ -8,13 +8,7 @@
 // SCSS to override and tweak the styles of the OL widgets.
 //
 
-body .ol-control {
-    display: none !important;
-}
-
-body .ol-attribution.ol-uncollapsible {
-    background-color: $white;
-    background: $white;
+body .ol-attribution {
     border: 1px solid $app-primary;
     position: absolute;
     right: -1px;
@@ -22,6 +16,12 @@ body .ol-attribution.ol-uncollapsible {
     font-weight: normal;
     padding: 0;
     border-radius: 0;
+
+    &:not(.ol-collapsed) {
+        background-color: $white;
+        background: $white;
+        opacity: 1;
+    }
 
     button {
         border-radius: 0;
@@ -39,6 +39,9 @@ body .ol-attribution.ol-uncollapsible {
         margin: 0px;
         height: 40px;
         width: 40px;
+        &:hover, &:active, &:focus {
+            background-color: $app-primary;
+        }
     }
 
     ul, li {
@@ -47,11 +50,5 @@ body .ol-attribution.ol-uncollapsible {
         margin: 0;
         display: inline-block;
         font-size: 0.75rem;
-    }
-
-    &.ol-collapsed ul,
-    &:not(.ol-collapsed) button:hover [role=tooltip],
-    span[role=tooltip] {
-        display:none
     }
 }

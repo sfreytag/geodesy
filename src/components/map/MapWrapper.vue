@@ -1,3 +1,4 @@
+
 <!--
 MapWrapper
 Sets up the ol map and exposes useful things to the rest of the app by setting
@@ -25,7 +26,7 @@ them in the map interface.
     import OSM from 'ol/source/OSM'
     import {Map, View} from 'ol'
     import {transform} from 'ol/proj'
-    import {defaults as defaultControls} from 'ol/control';
+    import Attribution from 'ol/control/Attribution'
     import {setMap, setExtentSource, setReticleLayer} from '../../map/interface.js'
     import Feature from "ol/Feature"
     import Point from 'ol/geom/Point'
@@ -79,9 +80,10 @@ them in the map interface.
                     multiWorld: true
                 })
 
+                const a = new Attribution({collapsible: true, collapsed: true})
                 let m = new Map({
                     target: this.$refs.map,
-                    controls: defaultControls(),
+                    controls: [a],
                     layers: [mapLayer, extentLayer, reticleLayer],
                     view: origin
                 })
