@@ -1,0 +1,63 @@
+{
+  "name": "geodesy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "processData": "node scripts/processData.js",
+    "processGml": "node scripts/processGml.js",
+    "deploy": "npm-run-all processData processGml build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@rgrove/parse-xml": "^2.0.3",
+    "@turf/turf": "^5.1.6",
+    "@vue/cli-plugin-babel": "^4.3.0",
+    "@vue/cli-plugin-eslint": "^4.3.0",
+    "@vue/cli-service": "^4.3.0",
+    "axios": "^0.19.2",
+    "babel-eslint": "^10.1.0",
+    "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.11.0",
+    "core-js": "^3.6.4",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "jquery": "^3.4.1",
+    "node-sass": "^4.13.1",
+    "npm-run-all": "^4.1.5",
+    "ol": "^6.3.1",
+    "popper": "^1.0.1",
+    "randomcolor": "^0.5.4",
+    "rbush": "^3.0.1",
+    "rbush-knn": "^3.0.1",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2",
+    "shapefile": "^0.6.6",
+    "style-resources-loader": "^1.3.2",
+    "vue": "^2.6.11",
+    "vue-cli-plugin-style-resources-loader": "^0.1.4",
+    "vue-template-compiler": "^2.6.11",
+    "vuex": "^3.1.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

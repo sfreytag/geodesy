@@ -1,0 +1,39 @@
+// Body colors
+$body-bg: #efefef;
+$body-color: $text;
+
+// Fonts
+$font-family-sans-serif: 'Open Sans', sans-serif;
+$font-size-base: 0.9rem;
+
+// Make the border radiuses a bit bigger.
+$border-radius-sm: 0 !default;
+$border-radius: 0 !default;
+$border-radius-lg: 0 !default;
+
+// Map the Bootstrap theme variables to our app colors.
+$theme-colors: ();
+$theme-colors: map-merge(
+    (
+        "primary":    $app-primary,
+        "secondary":  $app-secondary,
+        "success":    $app-success,
+        "info":       $app-info,
+        "warning":    $app-warning,
+        "danger":     $app-danger,
+        "light":      $app-light,
+        "dark":       $app-dark
+    ),
+    $theme-colors
+);
+
+// Turn off shadows.
+$enable-shadows: false;
+
+// Font sizes.
+$enable-responsive-font-sizes: true;
+
+// Heading weights.
+$headings-font-weight: 700;
+
+
