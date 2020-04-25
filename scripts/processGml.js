@@ -34,7 +34,7 @@ let handlers = {
   'gml:Conversion': handleNoop,
   'gml:ConcatenatedOperation': handleNoop,
   'gml:ProjectedCRS': handleProjectedCRS,
-  'gml:GeodeticCRS': handleNoop,
+  'gml:GeodeticCRS': handleGeodeticCRS,
   'gml:VerticalCRS': handleNoop,
   'gml:CompoundCRS': handleNoop,
   'gml:EngineeringCRS': handleNoop,
@@ -122,6 +122,34 @@ function handleProjectedCRS(projectedCRS) {
 }
 
 /**
+ * handleGeodeticCRS
+ */
+function handleGeodeticCRS(geodeticCRS) {
+  let entry = makeTemplate()
+  geodeticCRS.children.forEach(function(child) {
+    if (child.name == "gml:name")
+      entry.name = child.children[0].text
+    else if (child.name == "gml:identifier")
+      entry.code = child.children[0].text.split(":").pop()
+    else if (child.name == "gml:domainOfValidity")
+      entry.area = child.attributes['xlink:href'].split(":").pop()
+    else if (child.name == "gml:metaDataProperty") {
+      entry.deprecated = false
+      // There are two types of metadata inside gml:metaDataProperty
+      const cmd = getChildByName(child, "epsg:CommonMetaData")
+      const crs = getChildByName(child, "epsg:CRSMetaData")
+      // Only process the CommonMetaData for now
+      if (cmd) {
+        const isD = getChildByName(cmd, "epsg:isDeprecated")
+        entry.deprecated = isD.children[0].text === "true"
+      }
+    }
+  })
+  entry.type="GeodeticCRS"
+  return entry
+}
+
+/**
  * makeTemplate returns a template for the data we want to store for each GML
  * dictionary entry.
  */
@@ -133,6 +161,7 @@ function makeTemplate() {
  * getChildByName
  */
 function getChildByName(node, name) {
+  if (!(node && node.children)) return false
   let i
   for (i = 0; i < node.children.length; i++) {
     if (node.children[i].name == name) return node.children[i]

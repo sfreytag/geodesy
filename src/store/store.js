@@ -21,15 +21,19 @@ export const store =  new Vuex.Store({
         sort: 'size',
         // Filters for the results
         filters: {
-            deprecated: true
+            deprecated: false,
+            typeProjectedCrs: true,
+            typeGeodeticCrs: true
         }
     },
 
     getters: {
         filteredResults(state) {
             return state.results.filter((r) => {
-                const deprecatedTest = state.filters.deprecated ? true : r.deprecated == false
-                return deprecatedTest
+                if (!state.filters.deprecated && r.deprecated) return false
+                if (!state.filters.typeProjectedCrs && r.type == "ProjectedCRS") return false
+                if (!state.filters.typeGeodeticCrs && r.type == "GeodeticCRS") return false
+                return true
             })
         },
         sortedResults(state, getters) {
@@ -62,7 +66,13 @@ export const store =  new Vuex.Store({
         },
         setDeprecated(state, d) {
             state.filters.deprecated = d
-        }
+        },
+        setTypeProjectedCrs(state, p) {
+            state.filters.typeProjectedCrs = p
+        },
+        setTypeGeodeticCrs(state, g) {
+            state.filters.typeGeodeticCrs = g
+        },
     },
 
     actions: {}

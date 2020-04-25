@@ -21,52 +21,23 @@ Display the list of results from a map search.
             <div class="tools p-2" v-if="hasResults">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="h5 mb-0">Search Results</span>
-                    <span class="text-link text-primary btn-sm p-0 mt-1" v-on:click="clearSearch">Clear search</span>
                     <b-icon-justify class="icon text-primary" font-scale="2" v-on:click="toggle"/>
                 </div>
             </div>
 
             <div v-if="hasResults" class="tools lower px-2 pb-2 d-flex justify-content-between">
-                <div>
-                    <b-dropdown variant="outline-primary"
-                        text="Order by"
-                        size="sm">
-                        <b-dropdown-item v-on:click="setSort('size')">
-                            <span :class="{'font-weight-bold': sort == 'size'}">
-                                Size in Mm<sup>2</sup>
-                            </span>
-                        </b-dropdown-item>
-                        <b-dropdown-item v-on:click="setSort('code')">
-                            <span :class="{'font-weight-bold': sort == 'code'}">
-                                EPSG Code
-                            </span>
-                        </b-dropdown-item>
-                        <b-dropdown-item v-on:click="setSort('name')">
-                            <span :class="{'font-weight-bold': sort == 'name'}">
-                                Name
-                            </span>
-                        </b-dropdown-item>
-                    </b-dropdown>
-                </div>
-
-                <div>
-                    <b-dropdown variant="outline-primary"
-                        text="Filters"
-                        size="sm">
-                        <b-dropdown-form class="p-2">
-                            <b-form-group class="text-nowrap mb-0">
-                                <b-form-checkbox v-model="filters.deprecated">Include deprecated</b-form-checkbox>
-                            </b-form-group>
-                        </b-dropdown-form>
-                    </b-dropdown>
-                </div>
-
+                <button class="btn btn-outline-primary btn-sm"
+                    v-on:click="clearSearch">
+                    Clear search
+                </button>
 
                 <button class="btn btn-outline-primary btn-sm"
                     :disabled="activeCount == 0"
                     v-on:click="hideAll">
                     Hide all
                 </button>
+
+                <sort-filter></sort-filter>
             </div>
 
             <div v-if="hasResults" class="scroll-container px-2 pt-2">
@@ -119,11 +90,9 @@ Display the list of results from a map search.
 <script>
     import {mapState, mapMutations, mapGetters} from 'vuex'
     import EpsgEntry from './EpsgEntry.vue'
-    import {
-        BIconJustify, BDropdown, BDropdownItem, BDropdownForm, BFormCheckbox,
-        BFormGroup
-    } from 'bootstrap-vue'
+    import {BIconJustify} from 'bootstrap-vue'
     import {getExtentSource} from '@/map/interface.js'
+    import SortFilter from './SortFilter.vue'
 
     export default {
         data: function() {
@@ -135,11 +104,7 @@ Display the list of results from a map search.
         components: {
             'epsg-entry': EpsgEntry,
             'b-icon-justify': BIconJustify,
-            'b-dropdown': BDropdown,
-            'b-dropdown-item': BDropdownItem,
-            'b-dropdown-form': BDropdownForm,
-            'b-form-checkbox': BFormCheckbox,
-            'b-form-group': BFormGroup
+            'sort-filter': SortFilter
         },
         computed: {
             hasResults() {
@@ -151,7 +116,7 @@ Display the list of results from a map search.
                 this.setLeftDeadSpace(deadSpace)
                 return left
             },
-            ...mapState(['results', 'sort', 'filters']),
+            ...mapState(['results']),
             ...mapGetters(['sortedResults'])
         },
         watch: {
@@ -177,7 +142,7 @@ Display the list of results from a map search.
             clearSearch() {
                 this.$emit('clear-search')
             },
-            ...mapMutations(['setLeftDeadSpace', 'setHideAll', 'setSort'])
+            ...mapMutations(['setLeftDeadSpace', 'setHideAll'])
         }
     }
 </script>
