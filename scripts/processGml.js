@@ -134,7 +134,6 @@ function handleGeodeticCRS(geodeticCRS) {
     else if (child.name == "gml:domainOfValidity")
       entry.area = child.attributes['xlink:href'].split(":").pop()
     else if (child.name == "gml:metaDataProperty") {
-      entry.deprecated = false
       // There are two types of metadata inside gml:metaDataProperty
       const cmd = getChildByName(child, "epsg:CommonMetaData")
       const crs = getChildByName(child, "epsg:CRSMetaData")
