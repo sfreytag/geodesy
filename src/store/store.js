@@ -23,7 +23,11 @@ export const store =  new Vuex.Store({
         filters: {
             deprecated: false,
             typeProjectedCrs: true,
-            typeGeodeticCrs: true
+            typeGeodeticCrs: true,
+            unitMetre: true,
+            unitFoot: false,
+            unitDegree: false,
+            unitUnknown: false
         },
         // The map projection code
         projection: 'EPSG:3857'
@@ -32,9 +36,15 @@ export const store =  new Vuex.Store({
     getters: {
         filteredResults(state) {
             return state.results.filter((r) => {
-                if (!state.filters.deprecated && r.deprecated) return false
-                if (!state.filters.typeProjectedCrs && r.type == "ProjectedCRS") return false
-                if (!state.filters.typeGeodeticCrs && r.type == "GeodeticCRS") return false
+                const f = state.filters
+                if (!f.deprecated && r.deprecated) return false
+                if (!f.typeProjectedCrs && r.type == "ProjectedCRS") return false
+                if (!f.typeGeodeticCrs && r.type == "GeodeticCRS") return false
+                if (!f.unitMetre && r.unit.indexOf("metre") != -1) return false
+                if (!f.unitFoot && r.unit.indexOf("foot") != -1) return false
+                if (!f.unitDegree && r.unit.indexOf("degree") != -1) return false
+                if (!f.unitUnknown && r.unit.indexOf("unknown") != -1) return false
+
                 return true
             })
         },
@@ -76,8 +86,19 @@ export const store =  new Vuex.Store({
             state.filters.typeGeodeticCrs = g
         },
         setProjection(state, p) {
-            console.log('setProjection??', p)
             state.projection = p
+        },
+        setUnitFoot(state, u) {
+            state.filters.unitFoot = u
+        },
+        setUnitMetre(state, u) {
+            state.filters.unitMetre = u
+        },
+        setUnitDegree(state, u) {
+            state.filters.unitDegree = u
+        },
+        setUnitUnknown(state, u) {
+            state.filters.unitUnknown = u
         }
     },
 

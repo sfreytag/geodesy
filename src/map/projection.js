@@ -24,7 +24,7 @@ function reproject(code) {
             if (projResult)
                 setProjection(projResult)
             else
-                alert ("No matching projection")
+                alert ("Cannot reproject to this... could not find a proj4 definition.")
         })
     }
 }

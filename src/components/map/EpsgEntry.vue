@@ -52,6 +52,10 @@ the map.
                         <b>Deprecated:</b>
                         {{deprecatedText}}
                     </li>
+                    <li>
+                        <b>Unit:</b>
+                        {{entry.unit}}
+                    </li>
                     <li v-if="canReproject">
                         <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
                     </li>

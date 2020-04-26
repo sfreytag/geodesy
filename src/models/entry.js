@@ -12,6 +12,7 @@ export default class Entry {
         this.name = info.name
         this.type = info.type
         this.deprecated = info.deprecated
+        this.unit = info.unit
 
         this.area = area
 

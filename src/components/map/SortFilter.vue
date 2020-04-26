@@ -27,12 +27,27 @@
                 </b-form-checkbox>
             </b-form-group>
 
-            <b-form-group class="text-nowrap mb-0" label="Types" label-class="font-weight-bold">
+            <b-form-group class="text-nowrap" label="Types" label-class="font-weight-bold">
                 <b-form-checkbox v-model="typeProjectedCrs">
                     <span class="text-sm">Projected CRS</span>
                 </b-form-checkbox>
                 <b-form-checkbox v-model="typeGeodeticCrs">
                     <span class="text-sm">Geodetic CRS</span>
+                </b-form-checkbox>
+            </b-form-group>
+
+            <b-form-group class="text-nowrap mb-0" label="Units" label-class="font-weight-bold">
+                <b-form-checkbox v-model="unitMetre">
+                    <span class="text-sm">Metre</span>
+                </b-form-checkbox>
+                <b-form-checkbox v-model="unitFoot">
+                    <span class="text-sm">Foot</span>
+                </b-form-checkbox>
+                <b-form-checkbox v-model="unitDegree">
+                    <span class="text-sm">Degree</span>
+                </b-form-checkbox>
+                <b-form-checkbox v-model="unitUnknown">
+                    <span class="text-sm">Unknown</span>
                 </b-form-checkbox>
             </b-form-group>
         </b-dropdown-form>
@@ -60,7 +75,10 @@
      the store's filter properties.
      */
    function mapFiltersGettersSetters() {
-        const filters = ['deprecated', 'typeProjectedCrs', 'typeGeodeticCrs']
+        const filters = [
+            'deprecated', 'typeProjectedCrs', 'typeGeodeticCrs', 'unitMetre',
+            'unitFoot', 'unitDegree', 'unitUnknown'
+        ]
         const computeds = {}
         filters.forEach((f) => {
             computeds[f] = {
