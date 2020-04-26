@@ -54,22 +54,30 @@
         BDropdown, BDropdownForm, BFormCheckbox, BFormGroup, BFormRadio
     } from 'bootstrap-vue'
 
-            let mapGettersSetters = function() {
-                const props = ['deprecated', 'typeProjectedCrs', 'typeGeodeticCrs']
-                const obj = {}
-                props.forEach((p) => {
-                    console.log(p)
-                    obj[p] = {
-                        get() {return this.$store.state.filters[p]},
-                        set(val) {this.$store.commit('set' + capitalise(p), val)}
-                    }
-                })
-                return obj
+    /**
+     * mapFiltersGettersSetters
+     * Reduce boilerplate by automatically creating the getters and setters for
+     the store's filter properties.
+     */
+   function mapFiltersGettersSetters() {
+        const filters = ['deprecated', 'typeProjectedCrs', 'typeGeodeticCrs']
+        const computeds = {}
+        filters.forEach((f) => {
+            computeds[f] = {
+                get() {return this.$store.state.filters[f]},
+                set(val) {this.$store.commit('set' + capitalise(f), val)}
             }
+        })
+        return computeds
+    }
 
-            function capitalise(s) {
-                return s.charAt(0).toUpperCase() + s.slice(1)
-            }
+    /**
+     * capitalise
+     * Utility func
+     */
+    function capitalise(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    }
 
     export default {
         components: {
@@ -84,7 +92,7 @@
                 get() {return this.$store.state.sort},
                 set(s) {this.$store.commit('setSort', s)}
             },
-            ...mapGettersSetters(),
+            ...mapFiltersGettersSetters(),
             ...mapState(['filters']),
         },
         methods: {
