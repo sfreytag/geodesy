@@ -52,7 +52,11 @@ the map.
                         <b>Deprecated:</b>
                         {{deprecatedText}}
                     </li>
+                    <li v-if="canReproject">
+                        <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
+                    </li>
                 </ul>
+                
             </div>
 
         </div>
@@ -89,13 +93,15 @@ the map.
 
 <script>
     import {fromExtent as polygonFromExtent} from 'ol/geom/Polygon.js'
-    import {getExtentSource, getMap} from '../../map/interface.js'
+    import {transformExtent} from 'ol/proj'
     import Feature from 'ol/Feature'
-    import randomColor from 'randomcolor'
     import {Style, Stroke, Text, Fill} from 'ol/style'
+    import GeoJSON from 'ol/format/GeoJSON'
+    import {getExtentSource, getMap} from '@/map/interface.js'
+    import {reproject} from '@/map/projection.js'
+    import randomColor from 'randomcolor'
     import {mapState} from 'vuex'
     import axios from 'axios'
-    import GeoJSON from 'ol/format/GeoJSON';
 
     export default {
         props: {
@@ -106,7 +112,8 @@ the map.
                 active: false,
                 extentFeature: null,
                 areaFeature: null,
-                locked: false
+                locked: false,
+                reprojecting: false
             }
         },
         computed: {
@@ -125,8 +132,14 @@ the map.
             extent() {
                 return this.entry.extent
             },
+            extentTransformed() {
+                return transformExtent(this.extent, 'EPSG:3857', this.projection)
+            },
             deprecatedText() {
                 return this.entry.deprecated ? "Yes" : "No"
+            },
+            canReproject() {
+                return this.entry.deprecated === false && this.entry.type == "ProjectedCRS"
             },
             color() {
                 return randomColor({
@@ -169,13 +182,16 @@ the map.
                     })
                 })
             },
-            ...mapState(['leftDeadSpace', 'hideAll', 'sort'])
+            ...mapState(['leftDeadSpace', 'hideAll', 'sort', 'projection'])
         },
         watch: {
             hideAll(newVal) {
                 if (newVal == true) {
                     this.quickDeselect()
                 }
+            },
+            projection(newVal, oldVal) {
+                if (this.active) this.refresh(oldVal, newVal)
             }
         },
         methods: {
@@ -191,7 +207,9 @@ the map.
                 this.active = true
                 this.$emit("select", true)
 
-                this.extentFeature = new Feature(polygonFromExtent(this.extent))
+                let extentPolygon = polygonFromExtent(this.extent)
+                extentPolygon.transform('EPSG:3857', this.projection)
+                this.extentFeature = new Feature(extentPolygon)
                 this.extentFeature.setId(this.extentId)
                 this.extentFeature.setStyle(this.extentStyle)
 
@@ -224,7 +242,7 @@ the map.
             // the left.
             fitToEntry() {
                 const left = 20 + this.leftDeadSpace;
-                getMap().getView().fit(this.extent, {
+                getMap().getView().fit(this.extentTransformed, {
                     padding: [20, 20, 20, left]
                 })
             },
@@ -241,6 +259,19 @@ the map.
                 })
                 source.removeFeature(this.extentFeature)
                 source.removeFeature(this.areaFeature)
+            },
+            // Refresh the geometries when the projection changes
+            refresh(from, to) {
+                let extentGeom = this.extentFeature.getGeometry()
+                let areaGeom = this.areaFeature.getGeometry()
+
+                extentGeom.transform(from, to)
+                areaGeom.transform(from, to)
+
+                if (this.reprojecting) {
+                    this.fitToEntry()
+                    this.reprojecting = false
+                }
             },
             // Quickly deselect this entry, assuming something else is clearing
             // all the features.
@@ -259,12 +290,16 @@ the map.
                     const features = (new GeoJSON({
                         dataProjection: 'EPSG:4326',
                     })).readFeatures(
-                        response.data, {featureProjection: 'EPSG:3857'}
+                        response.data, {featureProjection: this.projection}
                     )
                     const feature = features[0]
                     feature.setStyle(this.areaStyle)
                     return feature
                 })
+            },
+            reproject() {
+                this.reprojecting = true
+                reproject(this.entry.code, this.extent)
             }
         }
     }

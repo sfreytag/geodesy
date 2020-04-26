@@ -24,13 +24,12 @@ them in the map interface.
     import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
     import {Vector as VectorSource} from 'ol/source'
     import OSM from 'ol/source/OSM'
-    import {Map, View} from 'ol'
-    import {transform} from 'ol/proj'
+    import {Map} from 'ol'
     import Attribution from 'ol/control/Attribution'
-    import {setMap, setExtentSource, setReticleLayer} from '../../map/interface.js'
-    import Feature from "ol/Feature"
+    import Feature from 'ol/Feature'
     import Point from 'ol/geom/Point'
-    import {Style, Icon} from "ol/style"
+    import {Style, Icon} from 'ol/style'
+    import {setMap, setExtentSource, setReticleLayer, origin} from '@/map/interface.js'
 
     export default {
         mounted: function() {
@@ -65,19 +64,10 @@ them in the map interface.
                 setReticleLayer(reticleLayer)
 
                 let mapLayer = new TileLayer({
-                    projection: 'EPSG:3857',
+                    projection: this.projection,
                     source: new OSM(),
                     className: 'bw-filter',
                     opacity: 0.7
-                })
-
-                const origin = new View({
-                    center: transform(
-                        [0, 50], 'EPSG:4326', 'EPSG:3857'
-                    ),
-                    zoom: 4,
-                    projection: 'EPSG:3857',
-                    multiWorld: true
                 })
 
                 const a = new Attribution({collapsible: true, collapsed: true})

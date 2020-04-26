@@ -24,7 +24,9 @@ export const store =  new Vuex.Store({
             deprecated: false,
             typeProjectedCrs: true,
             typeGeodeticCrs: true
-        }
+        },
+        // The map projection code
+        projection: 'EPSG:3857'
     },
 
     getters: {
@@ -73,6 +75,10 @@ export const store =  new Vuex.Store({
         setTypeGeodeticCrs(state, g) {
             state.filters.typeGeodeticCrs = g
         },
+        setProjection(state, p) {
+            console.log('setProjection??', p)
+            state.projection = p
+        }
     },
 
     actions: {}

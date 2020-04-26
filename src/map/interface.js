@@ -1,6 +1,6 @@
 /**
- * map/interface.js is a module to hold non-reactive map state and common map
- * functions to be shared between all Vue components.
+ * map/interface.js is a module to hold non-reactive map state and data to be
+ * shared between all Vue components.
  *
  * The goal is not to reinvent the wheel by creating an API on top of the OL API
  * so eg rather than implement a zoomIn method here ,it is better for the
@@ -12,6 +12,9 @@
  * olMap.getView().setZoom(4)
  * ```
  */
+
+import {View} from 'ol'
+import {transform} from 'ol/proj'
 
 let map = null
 let extentSource = null
@@ -41,11 +44,21 @@ function setReticleLayer(l) {
     reticleLayer = l
 }
 
+const origin = new View({
+    center: transform(
+        [0, 50], 'EPSG:4326', 'EPSG:3857'
+    ),
+    zoom: 4,
+    projection: 'EPSG:3857',
+    multiWorld: true
+})
+
 export {
+    origin,
     getMap,
     setMap,
     getExtentSource,
     setExtentSource,
     getReticleLayer,
-    setReticleLayer
+    setReticleLayer,
 }

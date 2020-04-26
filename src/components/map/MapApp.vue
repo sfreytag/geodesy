@@ -8,6 +8,14 @@ map via the map wrapper.
     <div class="map-wrapper-container">
         <map-wrapper @map-singleclick="onMapSingleclick"/>
         <results @clear-search="clearSearch"/>
+        <div class="projectionControl p-2 bg-white">
+            <span class="text-sm mr-2">Current projection: {{projection}}</span>
+            <button class="btn btn-primary btn-sm"
+                v-on:click="resetProjection"
+                v-if="projection != 'EPSG:3857'">
+                Reset to EPSG:3857
+            </button>
+        </div>
     </div>
 </template>
 
@@ -16,12 +24,17 @@ map via the map wrapper.
         width: 100%;
         height: 100%;
     }
+    .projectionControl {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
 </style>
 
 <script>
     import MapWrapper from "../map/MapWrapper.vue"
     import Results from "../map/Results.vue"
-    import {mapMutations} from "vuex"
+    import {mapMutations, mapState} from "vuex"
     import {loadTree, getTree} from "../../map/tree.js"
     import {loadAreaIndex, getAreaIndex} from "../../map/areaIndex.js"
     import {getReticleLayer, getExtentSource} from "../../map/interface.js"
@@ -29,12 +42,25 @@ map via the map wrapper.
     import knn from "rbush-knn"
     import Point from "ol/geom/Point"
     import Entry from "@/models/entry.js"
+    import {reproject} from '@/map/projection.js'
 
     // Export the component.
     export default {
         components: {
             'map-wrapper': MapWrapper,
             'results': Results
+        },
+        computed: {
+            ...mapState(['projection'])
+        },
+        watch: {
+            projection(to, from) {
+                getReticleLayer()
+                    .getSource()
+                    .getFeatureById('reticle')
+                    .getGeometry()
+                    .transform(from, to)
+            }
         },
         methods: {
             clearSearch() {
@@ -71,6 +97,9 @@ map via the map wrapper.
                     })
                     this.setResults(results)
                 })
+            },
+            resetProjection() {
+                reproject('3857')
             },
             updateReticle(coord) {
                 const rl = getReticleLayer()
