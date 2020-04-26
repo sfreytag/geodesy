@@ -25,8 +25,9 @@ The UI is a Vue.js application running on top of a JSON flat file database. This
 2. Clone this repo
 3. Run `npm install`
 4. Download the EPSG Registry. You need to create a directory `epsg` in the project root, and add these files to it: `EPSG_Polygons.dbf`, `EPSG_Polygons.shp`, `GmlDictionary.xml`
-5. Build the database from the EPSG data files. Run `npm run processData` and `npm run processGml`
-6. You should now be able to do `npm run serve` and access a local version at http://localhost:8080
+5. Download the WKT Zip archive and unzip it to `epsg/wkt`
+6. Build the database from the EPSG data files. Run `npm run processData` and `npm run processGml`
+7. You should now be able to do `npm run serve` and access a local version at http://localhost:8080
 
 Other NPM scripts:
 

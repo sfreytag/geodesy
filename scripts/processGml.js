@@ -3,6 +3,7 @@
 const fs = require("fs")
 const path = require("path")
 const parseXml = require("@rgrove/parse-xml")
+const parseWkt = require("wkt-parser")
 
 // Execute the script in the project root.
 process.chdir(path.normalize(__dirname + "/.."));
@@ -16,7 +17,9 @@ let areaIndex = {}
 // Load the GML dictionary and parse it. parseXML returns a JS object of the
 // entire doc rather than a stream, but it seems to work OK even on this
 // large file.
+console.log("Loading XML...")
 let xmldata = fs.readFileSync("epsg/9.8.9/GmlDictionary.xml", {encoding: "UTF-8"})
+console.log("Parsing XML...")
 let parsed = parseXml(xmldata)
 
 // Extract the list of <gml:DictionaryEntry> tags.
@@ -61,6 +64,7 @@ let handlers = {
 // Iterate through the list of dictionary entries and call the handler for each
 // one.
 let i = 0
+console.log("Processing entries...")
 for (let i = 0; i < gmlEntries.length; i++) {
   let gmlEntry = gmlEntries[i]
   if (gmlEntry.type == "element" && gmlEntry.name == "gml:dictionaryEntry") {
@@ -76,7 +80,8 @@ for (let i = 0; i < gmlEntries.length; i++) {
           name: entry.name,
           code: entry.code,
           type: entry.type,
-          deprecated: entry.deprecated
+          deprecated: entry.deprecated,
+          unit: entry.unit
         })
       }
     }
@@ -117,6 +122,7 @@ function handleProjectedCRS(projectedCRS) {
        entry.deprecated = isD.children[0].text === "true"
     }
   })
+  entry.unit = getUnit(entry.code)
   entry.type = "ProjectedCRS"
   return entry
 }
@@ -145,6 +151,7 @@ function handleGeodeticCRS(geodeticCRS) {
     }
   })
   entry.type="GeodeticCRS"
+  entry.unit = getUnit(entry.code)
   return entry
 }
 
@@ -153,7 +160,7 @@ function handleGeodeticCRS(geodeticCRS) {
  * dictionary entry.
  */
 function makeTemplate() {
-  return {name: '', code: '', area: '', type: '', deprecated: ''}
+  return {name: '', code: '', area: '', type: '', deprecated: '', unit: ''}
 }
 
 /**
@@ -166,4 +173,28 @@ function getChildByName(node, name) {
     if (node.children[i].name == name) return node.children[i]
   }
   return false
+}
+
+/**
+ * getUnit
+ */
+ function getUnit(code) {
+  try {
+      const wktFile = "epsg/9.8.9/wkt/EPSG-CRS-" + code + ".txt"
+      const wktData = fs.readFileSync(wktFile, {encoding: "UTF-8"})
+      const wkt = parseWkt(wktData)
+      let unit
+      if (typeof wkt['LENGTHUNIT'] != 'undefined') {
+        unit = Object.keys(wkt['LENGTHUNIT'])[0]
+      }
+      if (typeof wkt['ANGLEUNIT'] != 'undefined') {
+        unit = Object.keys(wkt['ANGLEUNIT'])[0]
+      }
+      if (!unit) unit = "unknown"
+      return unit
+  }
+  catch (e) {
+    console.log("Missing WKT for ", code)
+    return 'unknown'
+  }
 }
