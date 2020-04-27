@@ -11,6 +11,8 @@ This app helps you to find useful EPSG entries around a particular location:
 - Reproject the map (for some CRS only)
 - Click through to epsg.io for more info
 
+It works on phones, too.
+
 Try it out at http://geodesy.appspot.com
 
 ## Current Limits

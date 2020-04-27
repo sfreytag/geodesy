@@ -25,6 +25,9 @@ Info about the app.
                     <li>Reproject the map (for some CRS only)
                     <li>Click through to epsg.io for more info</li>
                 </ul>
+                <p>
+                    It works on phones, too.
+                </p>
                 <h2>Limitations</h2>
                 <p>
                     At the moment, it only displays EPSG entries of the GML types:
