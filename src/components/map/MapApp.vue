@@ -8,7 +8,7 @@ map via the map wrapper.
     <div class="map-wrapper-container">
         <map-wrapper @map-singleclick="onMapSingleclick"/>
         <div class="projectionControl p-2 bg-white align-items-center d-none d-sm-flex">
-            <span class="text-sm d-none d-md-inline">Current projection:</span>
+            <span class="text-sm d-none d-md-inline mr-1">Current projection:</span>
             <span class="text-sm mr-2">{{projection}}</span>
             <button class="btn btn-primary btn-sm"
                 v-on:click="resetProjection"
