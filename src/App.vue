@@ -17,7 +17,7 @@ them.
 
                 <img src="/gfx/logo.png" width="38" height="38" alt="" class="mr-1" />
 
-                <h5 class="mb-0 mr-2">Geodesy</h5>
+                <h5 class="mb-0 mr-2 d-none d-sm-block">Geodesy</h5>
 
                 <ul class="nav nav-pills">
                     <li class="nav-item">

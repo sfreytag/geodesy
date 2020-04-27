@@ -7,15 +7,16 @@ map via the map wrapper.
 <template>
     <div class="map-wrapper-container">
         <map-wrapper @map-singleclick="onMapSingleclick"/>
-        <results @clear-search="clearSearch"/>
-        <div class="projectionControl p-2 bg-white">
-            <span class="text-sm mr-2">Current projection: {{projection}}</span>
+        <div class="projectionControl p-2 bg-white align-items-center d-none d-sm-flex">
+            <span class="text-sm d-none d-md-inline">Current projection:</span>
+            <span class="text-sm mr-2">{{projection}}</span>
             <button class="btn btn-primary btn-sm"
                 v-on:click="resetProjection"
                 v-if="projection != 'EPSG:3857'">
                 Reset to EPSG:3857
             </button>
         </div>
+        <results @clear-search="clearSearch"/>
     </div>
 </template>
 
@@ -26,8 +27,9 @@ map via the map wrapper.
     }
     .projectionControl {
         position: absolute;
-        right: 0;
+        right: 0px;
         top: 0;
+        height: 44px;
     }
 </style>
 

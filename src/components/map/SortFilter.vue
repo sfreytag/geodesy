@@ -1,15 +1,24 @@
 <template>
-    <b-dropdown variant="outline-primary"
-        dropright
-        text="Sort and filter"
-        size="sm"
-        ref="sortFilterDD">
 
-        <div class="close btn btn-sm btn-secondary rounded-circle"
-            v-on:click="hideDD">&times;</div>
+<div>
 
-        <b-dropdown-form>
-            <b-form-group class="text-nowrap" label="Sort by" label-class="font-weight-bold">
+<button class="btn btn-outline-primary btn-sm"
+    size="sm"
+    ref="sortFilterDD"
+    v-on:click="toggle">
+    Sort and filter ❯
+</button>
+
+<transition name="fade">
+    <div class="sortFilterTray p-1" v-if="open" :style="{left: left}">
+
+        <div class="close btn btn-sm btn-secondary rounded-circle d-flex justify-content-center align-items-center"
+            v-on:click="toggle">
+            &times;
+        </div>
+
+        <b-form>
+            <b-form-group class="text-nowrap mb-1" label="Sort by" label-class="font-weight-bold">
                 <b-form-radio v-model="sort" value="size">
                     <span class="text-sm">Size in Mm<sup>2</sup></span>
                 </b-form-radio>
@@ -21,13 +30,13 @@
                 </b-form-radio>
             </b-form-group>
 
-            <b-form-group class="text-nowrap" label="Deprecated entries" label-class="font-weight-bold">
+            <b-form-group class="text-nowrap mb-1" label="Deprecated entries" label-class="font-weight-bold">
                 <b-form-checkbox v-model="deprecated">
                     <span class="text-sm">Show deprecated entries</span>
                 </b-form-checkbox>
             </b-form-group>
 
-            <b-form-group class="text-nowrap" label="Types" label-class="font-weight-bold">
+            <b-form-group class="text-nowrap mb-1" label="Types" label-class="font-weight-bold">
                 <b-form-checkbox v-model="typeProjectedCrs">
                     <span class="text-sm">Projected CRS</span>
                 </b-form-checkbox>
@@ -47,11 +56,15 @@
                     <span class="text-sm">Degree</span>
                 </b-form-checkbox>
                 <b-form-checkbox v-model="unitUnknown">
-                    <span class="text-sm">Unknown</span>
+                    <span class="text-sm">Mixed or unknown</span>
                 </b-form-checkbox>
             </b-form-group>
-        </b-dropdown-form>
-    </b-dropdown>
+        </b-form>
+    </div>
+</transition>
+
+</div>
+
 </template>
 
 <style lang="scss" scoped>
@@ -60,13 +73,34 @@
         right: 10px;
         top: 10px;
         text-shadow: none;
+        width: 22px;
+        height: 22px;
+        padding-top: 2px;
+    }
+
+    .sortFilterTray {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        width: 200px;
+        overflow-y: scroll;
+        background-color: #ddd;
+        transition: left 0.5s;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
     }
 </style>
 
 <script>
     import {mapState} from 'vuex'
     import {
-        BDropdown, BDropdownForm, BFormCheckbox, BFormGroup, BFormRadio
+        BForm, BFormCheckbox, BFormGroup, BFormRadio
     } from 'bootstrap-vue'
 
     /**
@@ -99,8 +133,7 @@
 
     export default {
         components: {
-            'b-dropdown': BDropdown,
-            'b-dropdown-form': BDropdownForm,
+            'b-form': BForm,
             'b-form-checkbox': BFormCheckbox,
             'b-form-group': BFormGroup,
             'b-form-radio': BFormRadio
@@ -110,12 +143,27 @@
                 get() {return this.$store.state.sort},
                 set(s) {this.$store.commit('setSort', s)}
             },
+            left() {
+                // Default position
+                let left = 306
+                // Available space
+                let space = window.innerWidth - this.sliderSpace
+                // If there is not enough space, instead position its right
+                // endge on the RH of the screen
+                if (200 > space) left = window.innerWidth - 200
+                return left + "px"
+            },
             ...mapFiltersGettersSetters(),
-            ...mapState(['filters']),
+            ...mapState(['filters', 'sliderSpace']),
+        },
+        data () {
+            return {
+                open: false
+            }
         },
         methods: {
-            hideDD() {
-                this.$refs.sortFilterDD.hide()
+            toggle() {
+                this.open = !this.open
             }
         }
     }

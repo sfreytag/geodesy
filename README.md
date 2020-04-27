@@ -2,18 +2,25 @@
 
 Geodesy is a quick spatial search engine for the EPSG Geodetic Parameter Registry.
 
-This app helps you to find all the EPSG entries around a particular location:
+This app helps you to find useful EPSG entries around a particular location:
 
-- Click the map.
-- Get a list of entries immediately.
+- Click the map
+- Get a list of entries immediately
+- Sort and filter using some pragmatic tools
 - View their extents rightaway.
-- Click through to other sites (epsg.io) for all the info once you've found what you're looking for.
+- Reproject the map (for some CRS only)
+- Click through to epsg.io for more info
 
 Try it out at http://geodesy.appspot.com
 
 ## Current Limits
 
-At the moment, it only displays EPSG entries of the GML type `<gml:ProjectedCRS>`. I'll be adding more in the next few weeks.
+At the moment, it only displays EPSG entries of the GML types:
+
+- `<gml:ProjectedCRS>`
+- `<gml:GeodeticCRS>`
+
+I'll be adding more in the next few weeks or open an issue to request a GML type to be added.
 
 ## Code
 

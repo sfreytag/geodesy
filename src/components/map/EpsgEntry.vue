@@ -56,7 +56,7 @@ the map.
                         <b>Unit:</b>
                         {{entry.unit}}
                     </li>
-                    <li v-if="canReproject">
+                    <li v-if="canReproject" class="d-none d-sm-block">
                         <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
                     </li>
                 </ul>
@@ -186,7 +186,7 @@ the map.
                     })
                 })
             },
-            ...mapState(['leftDeadSpace', 'hideAll', 'sort', 'projection'])
+            ...mapState(['sliderSpace', 'hideAll', 'sort', 'projection'])
         },
         watch: {
             hideAll(newVal) {
@@ -245,7 +245,7 @@ the map.
             // Fit the view around the extent, allowing for the  slider tray on
             // the left.
             fitToEntry() {
-                const left = 20 + this.leftDeadSpace;
+                const left = 20 + this.sliderSpace;
                 getMap().getView().fit(this.extentTransformed, {
                     padding: [20, 20, 20, left]
                 })

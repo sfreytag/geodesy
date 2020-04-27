@@ -14,7 +14,7 @@ export const store =  new Vuex.Store({
         // The list of results from a spatial search
         results: [],
         // The dead space occupied by the slider tray on the left
-        leftDeadSpace: 0,
+        sliderSpace: 0,
         // A flag to tell all EpsgEntries to deselect themselves
         hideAll: false,
         // The sort order for the EPSG Entry
@@ -67,8 +67,8 @@ export const store =  new Vuex.Store({
         setResults(state, results) {
             state.results = results
         },
-        setLeftDeadSpace(state, n) {
-            state.leftDeadSpace = n
+        setSliderSpace(state, n) {
+            state.sliderSpace = n
         },
         setHideAll(state, b) {
             state.hideAll = b

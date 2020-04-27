@@ -6,7 +6,10 @@ Display the list of results from a map search.
 <template>
     <transition name="slide">
         <div class="results d-flex flex-column" :style="{left: left}">
-            <div class="p-4 text-center" v-if="!hasResults">
+            <p class="text-right p-2" v-if="!hasResults">
+                <b-icon-justify class="icon text-primary" font-scale="2" v-on:click="toggle"/>
+            </p>
+            <div class="px-4 pt-0 text-center" v-if="!hasResults">
                 <p>
                     Geodesy is a quick spatial search engine for the EPSG Geodetic Parameter Registry.
                 </p>
@@ -94,6 +97,8 @@ Display the list of results from a map search.
     import {getExtentSource} from '@/map/interface.js'
     import SortFilter from './SortFilter.vue'
 
+    const breakPoint = 576
+
     export default {
         data: function() {
             return {
@@ -111,9 +116,9 @@ Display the list of results from a map search.
                 return this.results.length > 0
             },
             left() {
-                const left = this.open ? '0' : '-261px'
-                const deadSpace = this.open ? 306 : 45
-                this.setLeftDeadSpace(deadSpace)
+                const left = this.open ? '0' : '-262px'
+                const deadSpace = this.open ? 306 : 44
+                this.setSliderSpace(deadSpace)
                 return left
             },
             ...mapState(['results']),
@@ -124,6 +129,12 @@ Display the list of results from a map search.
                 if (newVal == 0) {
                     this.setHideAll(false)
                 }
+            },
+            results(newVal) {
+                if (newVal.length > 0)
+                    this.open = true
+                else if (newVal.length == 0 && window.innerWidth < breakPoint)
+                    this.open = false
             }
         },
         methods: {
@@ -131,7 +142,10 @@ Display the list of results from a map search.
                 this.open = !this.open
             },
             onEntrySelection(active) {
-                if (active) this.activeCount++
+                if (active) {
+                    this.activeCount++
+                    if (window.innerWidth < breakPoint && this.open) this.toggle()
+                }
                 else this.activeCount--
             },
             hideAll() {
@@ -142,7 +156,10 @@ Display the list of results from a map search.
             clearSearch() {
                 this.$emit('clear-search')
             },
-            ...mapMutations(['setLeftDeadSpace', 'setHideAll'])
+            ...mapMutations(['setSliderSpace', 'setHideAll'])
+        },
+        created() {
+            if (window.innerWidth < breakPoint) this.open = false
         }
     }
 </script>
