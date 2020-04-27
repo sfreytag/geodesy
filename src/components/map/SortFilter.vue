@@ -10,15 +10,16 @@
 </button>
 
 <transition name="fade">
-    <div class="sortFilterTray p-1" v-if="open" :style="{left: left}">
+    <div class="sortFilterTray p-2" v-if="open" :style="{left: left}">
 
         <div class="close btn btn-sm btn-secondary rounded-circle d-flex justify-content-center align-items-center"
             v-on:click="toggle">
             &times;
         </div>
 
-        <b-form>
-            <b-form-group class="text-nowrap mb-1" label="Sort by" label-class="font-weight-bold">
+        <form>
+            <div class="form-group">
+                <label class="font-weight-bold">Sort</label>
                 <b-form-radio v-model="sort" value="size">
                     <span class="text-sm">Size in Mm<sup>2</sup></span>
                 </b-form-radio>
@@ -28,24 +29,27 @@
                 <b-form-radio v-model="sort" value="name">
                     <span class="text-sm">Name</span>
                 </b-form-radio>
-            </b-form-group>
+            </div>
 
-            <b-form-group class="text-nowrap mb-1" label="Deprecated entries" label-class="font-weight-bold">
+             <div class="form-group">
+                <label class="font-weight-bold">Deprecated entries</label>
                 <b-form-checkbox v-model="deprecated">
                     <span class="text-sm">Show deprecated entries</span>
                 </b-form-checkbox>
-            </b-form-group>
+            </div>
 
-            <b-form-group class="text-nowrap mb-1" label="Types" label-class="font-weight-bold">
+             <div class="form-group">
+                <label class="font-weight-bold">Types</label>
                 <b-form-checkbox v-model="typeProjectedCrs">
                     <span class="text-sm">Projected CRS</span>
                 </b-form-checkbox>
                 <b-form-checkbox v-model="typeGeodeticCrs">
                     <span class="text-sm">Geodetic CRS</span>
                 </b-form-checkbox>
-            </b-form-group>
+            </div>
 
-            <b-form-group class="text-nowrap mb-0" label="Units" label-class="font-weight-bold">
+            <div class="form-group">
+                <label class="font-weight-bold">Units</label>
                 <b-form-checkbox v-model="unitMetre">
                     <span class="text-sm">Metre</span>
                 </b-form-checkbox>
@@ -58,8 +62,36 @@
                 <b-form-checkbox v-model="unitUnknown">
                     <span class="text-sm">Mixed or unknown</span>
                 </b-form-checkbox>
-            </b-form-group>
-        </b-form>
+            </div>
+
+             <div class="form-group">
+                <label class="font-weight-bold">Size</label>
+                <div class="text-sm">Spherical area in Mm<sup>2</sup></div>
+                <div class="px-2">
+                    <vue-slider v-model="slider"
+                        :enable-cross="false"
+                        :min="0"
+                        :max="550"
+                        :interval="10"
+                        @change="onSliderChange" />
+                </div>
+                <div class="text-sm d-flex justify-content-between">
+                    <span>Country</span>
+                    <span>Continent</span>
+                    <span>World</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="font-weight-bold">Wildcards</label>
+                <b-form-checkbox v-model="includeWgs">
+                    <span class="text-sm">Include all with 'WGS'</span>
+                </b-form-checkbox>
+                <b-form-checkbox v-model="includeUtm">
+                    <span class="text-sm">Include all with 'UTM'</span>
+                </b-form-checkbox>
+            </div>
+        </form>
     </div>
 </transition>
 
@@ -99,9 +131,8 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {
-        BForm, BFormCheckbox, BFormGroup, BFormRadio
-    } from 'bootstrap-vue'
+    import {BFormCheckbox, BFormRadio} from 'bootstrap-vue'
+    import VueSlider from 'vue-slider-component'
 
     /**
      * mapFiltersGettersSetters
@@ -111,7 +142,8 @@
    function mapFiltersGettersSetters() {
         const filters = [
             'deprecated', 'typeProjectedCrs', 'typeGeodeticCrs', 'unitMetre',
-            'unitFoot', 'unitDegree', 'unitUnknown'
+            'unitFoot', 'unitDegree', 'unitUnknown', 'areaMin', 'areaMax',
+            'includeWgs', 'includeUtm'
         ]
         const computeds = {}
         filters.forEach((f) => {
@@ -133,10 +165,9 @@
 
     export default {
         components: {
-            'b-form': BForm,
             'b-form-checkbox': BFormCheckbox,
-            'b-form-group': BFormGroup,
-            'b-form-radio': BFormRadio
+            'b-form-radio': BFormRadio,
+            'vue-slider': VueSlider
         },
         computed: {
             sort: {
@@ -158,12 +189,23 @@
         },
         data () {
             return {
-                open: false
+                open: false,
+                slider: [0, 550],
+                busy: false
             }
         },
         methods: {
             toggle() {
                 this.open = !this.open
+            },
+            onSliderChange() {
+                if (this.busy) return
+                this.busy = true
+                this.areaMin = this.slider[0]
+                this.areaMax = this.slider[1]
+                window.setTimeout(() => {
+                    this.busy = false
+                }, 500)
             }
         }
     }

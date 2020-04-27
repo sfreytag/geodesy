@@ -27,7 +27,11 @@ export const store =  new Vuex.Store({
             unitMetre: true,
             unitFoot: false,
             unitDegree: false,
-            unitUnknown: false
+            unitUnknown: false,
+            areaMin: 0,
+            areaMax: 550,
+            includeWgs: true,
+            includeUtm: true,
         },
         // The map projection code
         projection: 'EPSG:3857'
@@ -36,6 +40,7 @@ export const store =  new Vuex.Store({
     getters: {
         filteredResults(state) {
             return state.results.filter((r) => {
+                console.log(r.name, r.name.indexOf("WGS"))
                 const f = state.filters
                 if (!f.deprecated && r.deprecated) return false
                 if (!f.typeProjectedCrs && r.type == "ProjectedCRS") return false
@@ -44,7 +49,10 @@ export const store =  new Vuex.Store({
                 if (!f.unitFoot && r.unit.indexOf("foot") != -1) return false
                 if (!f.unitDegree && r.unit.indexOf("degree") != -1) return false
                 if (!f.unitUnknown && r.unit.indexOf("unknown") != -1) return false
-
+                if (r.sizeMm2 < f.areaMin) return false
+                if (r.sizeMm2 > f.areaMax) return false
+                if (!f.includeWgs && r.name.indexOf("WGS") != -1) return false
+                if (!f.includeUtm && r.name.indexOf("UTM") != -1) return false
                 return true
             })
         },
@@ -99,6 +107,21 @@ export const store =  new Vuex.Store({
         },
         setUnitUnknown(state, u) {
             state.filters.unitUnknown = u
+        },
+        setAreaMin(state, n) {
+            console.log('setAreaMin', n)
+            state.filters.areaMin = n
+        },
+        setAreaMax(state, n) {
+            console.log('setAreaMax', n)
+            state.filters.areaMax = n
+        },
+        setIncludeWgs(state, b) {
+            console.log('setIncludeWgs', b)
+            state.filters.includeWgs = b
+        },
+        setIncludeUtm(state, b) {
+            state.filters.includeUtm = b
         }
     },
 
