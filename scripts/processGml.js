@@ -38,10 +38,10 @@ let handlers = {
   'gml:ConcatenatedOperation': handleNoop,
   'gml:ProjectedCRS': handleProjectedCRS,
   'gml:GeodeticCRS': handleGeodeticCRS,
-  'gml:VerticalCRS': handleNoop,
-  'gml:CompoundCRS': handleNoop,
+  'gml:VerticalCRS': handleVerticalCRS,
+  'gml:CompoundCRS': handleCompoundCRS,
   'gml:EngineeringCRS': handleNoop,
-  'gml:CartesianCS': handleNoop,
+  'gml:CartesianCS': definitelyHandleNoop,
   'gml:VerticalCS': handleNoop,
   'gml:EllipsoidalCS': handleNoop,
   'gml:SphericalCS': handleNoop,
@@ -104,26 +104,22 @@ function handleNoop() {
 }
 
 /**
+ * definitelyHandleNoop is a 'no operation' handler for the GML entries we
+ * have definitely decided we don't want to index.
+ */
+function definitelyHandleNoop() {
+  return false;
+}
+
+/**
  * handleProjectedCRS extracts information about projected coordinate reference
  * systems, such as EPSG:27700 the GB national grid.
  */
 function handleProjectedCRS(projectedCRS) {
   let entry = makeTemplate()
-  projectedCRS.children.forEach(function(child) {
-    if (child.name == "gml:name")
-      entry.name = child.children[0].text
-    else if (child.name == "gml:identifier")
-      entry.code = child.children[0].text.split(":").pop()
-    else if (child.name == "gml:domainOfValidity")
-      entry.area = child.attributes['xlink:href'].split(":").pop()
-    else if (child.name == "gml:metaDataProperty") {
-      const cmd = getChildByName(child, "epsg:CommonMetaData")
-      const isD = getChildByName(cmd, "epsg:isDeprecated")
-       entry.deprecated = isD.children[0].text === "true"
-    }
-  })
-  entry.unit = getUnit(entry.code)
   entry.type = "ProjectedCRS"
+  entry = processCRSChildren(projectedCRS, entry)
+  entry.unit = getUnit(entry.code)
   return entry
 }
 
@@ -132,26 +128,32 @@ function handleProjectedCRS(projectedCRS) {
  */
 function handleGeodeticCRS(geodeticCRS) {
   let entry = makeTemplate()
-  geodeticCRS.children.forEach(function(child) {
-    if (child.name == "gml:name")
-      entry.name = child.children[0].text
-    else if (child.name == "gml:identifier")
-      entry.code = child.children[0].text.split(":").pop()
-    else if (child.name == "gml:domainOfValidity")
-      entry.area = child.attributes['xlink:href'].split(":").pop()
-    else if (child.name == "gml:metaDataProperty") {
-      // There are two types of metadata inside gml:metaDataProperty
-      const cmd = getChildByName(child, "epsg:CommonMetaData")
-      const crs = getChildByName(child, "epsg:CRSMetaData")
-      // Only process the CommonMetaData for now
-      if (cmd) {
-        const isD = getChildByName(cmd, "epsg:isDeprecated")
-        entry.deprecated = isD.children[0].text === "true"
-      }
-    }
-  })
   entry.type="GeodeticCRS"
+  entry = processCRSChildren(geodeticCRS, entry)
   entry.unit = getUnit(entry.code)
+  return entry
+}
+
+/**
+ * handleVerticalCRS
+ */
+function handleVerticalCRS(verticalCRS) {
+  let entry = makeTemplate()
+  entry.type="VerticalCRS"
+  entry = processCRSChildren(verticalCRS, entry)
+  entry.unit = getUnit(entry.code)
+  return entry
+}
+
+/**
+ * handleCompoundCRS
+ */
+function handleCompoundCRS(compoundCRS) {
+  let entry = makeTemplate()
+  entry.type="CompoundCRS"
+  entry = processCRSChildren(compoundCRS, entry)
+  entry.unit = getUnit(entry.code)
+  console.log("compound crs", entry)
   return entry
 }
 
@@ -178,7 +180,7 @@ function getChildByName(node, name) {
 /**
  * getUnit
  */
- function getUnit(code) {
+function getUnit(code) {
   try {
       const wktFile = "epsg/9.8.9/wkt/EPSG-CRS-" + code + ".txt"
       const wktData = fs.readFileSync(wktFile, {encoding: "UTF-8"})
@@ -197,4 +199,29 @@ function getChildByName(node, name) {
     console.log("Missing WKT for ", code)
     return 'unknown'
   }
+}
+
+/**
+ * processCRSChildren
+ */
+function processCRSChildren(crs, entry) {
+  crs.children.forEach(function(child) {
+    if (child.name == "gml:name")
+      entry.name = child.children[0].text
+    else if (child.name == "gml:identifier")
+      entry.code = child.children[0].text.split(":").pop()
+    else if (child.name == "gml:domainOfValidity")
+      entry.area = child.attributes['xlink:href'].split(":").pop()
+    else if (child.name == "gml:metaDataProperty") {
+      // There can be two types of metadata inside gml:metaDataProperty
+      const cmd = getChildByName(child, "epsg:CommonMetaData")
+      const crs = getChildByName(child, "epsg:CRSMetaData")
+      // Only process the CommonMetaData for now
+      if (cmd) {
+        const isD = getChildByName(cmd, "epsg:isDeprecated")
+        entry.deprecated = isD.children[0].text === "true"
+      }
+    }
+  })
+  return entry
 }
