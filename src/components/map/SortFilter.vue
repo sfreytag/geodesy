@@ -52,6 +52,9 @@
                 <b-form-checkbox v-model="typeCompoundCrs">
                     <span class="text-sm">Compound CRS</span>
                 </b-form-checkbox>
+                <b-form-checkbox v-model="typeEngineeringCrs">
+                    <span class="text-sm">Engineering CRS</span>
+                </b-form-checkbox>
             </div>
 
             <div class="form-group">
@@ -149,7 +152,8 @@
         const filters = [
             'deprecated', 'typeProjectedCrs', 'typeGeodeticCrs', 'unitMetre',
             'unitFoot', 'unitDegree', 'unitUnknown', 'areaMin', 'areaMax',
-            'includeWgs', 'includeUtm', 'typeVerticalCrs', 'typeCompoundCrs'
+            'includeWgs', 'includeUtm', 'typeVerticalCrs', 'typeCompoundCrs',
+            'typeEngineeringCrs'
         ]
         const computeds = {}
         filters.forEach((f) => {

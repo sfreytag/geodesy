@@ -17,17 +17,8 @@ Try it out at http://geodesy.appspot.com
 
 ## EPSG Entries
 
-At the moment, this app searches EPSG entries of the GML types:
-
-- ProjectedCRS
-- GeodeticCRS
-- VerticalCRS
-
-The following are not being searched:
-
-- CartesianCS: used by CRSs, not searchable via an extent.
-
-I'll be working through the remaining entries in the next few weeks. If there's one you really want to see, open an issue to request it to be added.
+Click the 'About' tab on http://geodesy.appspot.com to find out which EPSG entries are
+being searched, and which not.
 
 ## Code
 

@@ -30,18 +30,35 @@ Info about the app.
                 </p>
                 <h2>EPSG Entries</h2>
                 <p>
-                    At the moment, this app searches EPSG entries of the GML types:
+                    At the moment, this app finds EPSG entries of the GML types:
                 </p>
                 <ul>
-                    <li><tt class="text-danger">ProjectedCRS</tt></li>
-                    <li><tt class="text-danger">GeodeticCRS</tt></li>
-                    <li><tt class="text-danger">VerticalCRS</tt></li>
+                    <li><tt class="text-danger">gml:ProjectedCRS</tt></li>
+                    <li><tt class="text-danger">gml:GeodeticCRS</tt></li>
+                    <li><tt class="text-danger">gml:VerticalCRS</tt></li>
+                    <li><tt class="text-danger">gml:CompoundCRS</tt></li>
+                    <li><tt class="text-danger">gml:EngineeringCRS</tt></li>
                 </ul>
                 <p>
-                    The following are not being searched:
+                    The following GML types are used by one of the CRSs returned above and/or are not
+                    directly searchable via their own extents and so are not returned in the results.
+                    To find out more about them, click the map to get a list of CRSs, then for each one,
+                    click through to epsg.io to read about the CS and axes in use.
                 </p>
                 <ul>
-                    <li><tt class="text-danger">CartesianCS</tt>: used by CRSs, not searchable via an extent.</li>
+                    <li><tt class="text-danger">epsg:AxisName</tt></li>
+                    <li><tt class="text-danger">gml:CartesianCS</tt></li>
+                    <li><tt class="text-danger">gml:VerticalCS</tt></li>
+                    <li><tt class="text-danger">gml:EllipsoidalCS</tt></li>
+                </ul>
+                <p>
+                    The registry also contains entries for the areas of use. These are used for the
+                    spatial search tree, so as such are not directly returned in the results. However,
+                    each search result does include info about its associated area os use. The GML type
+                    this applies to is:
+                </p>
+                <ul>
+                    <li><tt class="text-danger">epsg:ExtentDefinition</tt></li>
                 </ul>
                 <p>
                     I'll be working through the remaining entries in the next few weeks. If there's one you really want to see, open an issue to request it to be added.

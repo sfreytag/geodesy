@@ -26,6 +26,7 @@ export const store =  new Vuex.Store({
             typeGeodeticCrs: true,
             typeVerticalCrs: true,
             typeCompoundCrs: true,
+            typeEngineeringCrs: true,
             unitMetre: true,
             unitFoot: true,
             unitDegree: true,
@@ -48,6 +49,7 @@ export const store =  new Vuex.Store({
                 if (!f.typeGeodeticCrs && r.type == "GeodeticCRS") return false
                 if (!f.typeVerticalCrs && r.type == "VerticalCRS") return false
                 if (!f.typeCompoundCrs && r.type == "CompoundCRS") return false
+                if (!f.typeEngineeringCrs && r.type == "EngineeringCRS") return false
                 if (!f.unitMetre && r.unit.indexOf("metre") != -1) return false
                 if (!f.unitFoot && r.unit.indexOf("foot") != -1) return false
                 if (!f.unitDegree && r.unit.indexOf("degree") != -1) return false
@@ -101,6 +103,9 @@ export const store =  new Vuex.Store({
         },
         setTypeCompoundCrs(state, c) {
             state.filters.typeCompoundCrs = c
+        },
+        setTypeEngineeringCrs(state, e) {
+            state.filters.typeEngineeringCrs = e
         },
         setProjection(state, p) {
             state.projection = p

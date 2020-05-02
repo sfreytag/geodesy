@@ -31,19 +31,34 @@ let gmlEntries = gmlDictionary.children
 // entries are not (yet) interesting, so these are mapped to a no-operation
 // function.
 let handlers = {
-  'epsg:ExtentDefinition': handleNoop,
-  'epsg:AxisName': handleNoop,
-  'gml:Transformation': handleNoop,
-  'gml:Conversion': handleNoop,
-  'gml:ConcatenatedOperation': handleNoop,
+  // The CRSs, of most interest
   'gml:ProjectedCRS': handleProjectedCRS,
   'gml:GeodeticCRS': handleGeodeticCRS,
   'gml:VerticalCRS': handleVerticalCRS,
   'gml:CompoundCRS': handleCompoundCRS,
-  'gml:EngineeringCRS': handleNoop,
+  'gml:EngineeringCRS': handleEngineeringCRS,
+
+  // These are the GML definitions of the areas extracted in processData. As
+  // such, they do not need indexing here.
+  'epsg:ExtentDefinition': definitelyHandleNoop,
+
+  // The following items are data or metadata used with or by CRSs. They do not
+  // have extents. As such they are not useful for the map-based search results.
+  // The idea would be:
+  // click map -> get list of CRSs -> click thru to epsg.io -> find out about
+  // CSs, axes, etc.
+  'epsg:AxisName': definitelyHandleNoop,
   'gml:CartesianCS': definitelyHandleNoop,
-  'gml:VerticalCS': handleNoop,
-  'gml:EllipsoidalCS': handleNoop,
+  'gml:VerticalCS': definitelyHandleNoop,
+  'gml:EllipsoidalCS': definitelyHandleNoop,
+
+
+  // These do have domains of validity, yet to be examined in depth:
+  'gml:Transformation': handleNoop,
+  'gml:Conversion': handleNoop,
+  'gml:ConcatenatedOperation': handleNoop,
+
+  // Not yet evaluated for usefulness
   'gml:SphericalCS': handleNoop,
   'gml:GeodeticDatum': handleNoop,
   'gml:VerticalDatum': handleNoop,
@@ -153,7 +168,17 @@ function handleCompoundCRS(compoundCRS) {
   entry.type="CompoundCRS"
   entry = processCRSChildren(compoundCRS, entry)
   entry.unit = getUnit(entry.code)
-  console.log("compound crs", entry)
+  return entry
+}
+
+/**
+ * handleEngineeringCRS
+ */
+function handleEngineeringCRS(engineeringCRS) {
+  let entry = makeTemplate()
+  entry.type="EngineeringCRS"
+  entry = processCRSChildren(engineeringCRS, entry)
+  entry.unit = getUnit(entry.code)
   return entry
 }
 
