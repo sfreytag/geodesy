@@ -24,6 +24,7 @@ export const store =  new Vuex.Store({
             deprecated: false,
             typeProjectedCrs: true,
             typeGeodeticCrs: true,
+            typeVerticalCrs: true,
             unitMetre: true,
             unitFoot: false,
             unitDegree: false,
@@ -92,6 +93,9 @@ export const store =  new Vuex.Store({
         },
         setTypeGeodeticCrs(state, g) {
             state.filters.typeGeodeticCrs = g
+        },
+        setTypeVerticalCrs(state, v) {
+            state.filters.typeVerticalCrs = v
         },
         setProjection(state, p) {
             state.projection = p

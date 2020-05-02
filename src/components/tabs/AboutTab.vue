@@ -28,16 +28,23 @@ Info about the app.
                 <p>
                     It works on phones, too.
                 </p>
-                <h2>Limitations</h2>
+                <h2>EPSG Entries</h2>
                 <p>
-                    At the moment, it only displays EPSG entries of the GML types:
+                    At the moment, this app searches EPSG entries of the GML types:
                 </p>
                 <ul>
                     <li><tt class="text-danger">ProjectedCRS</tt></li>
                     <li><tt class="text-danger">GeodeticCRS</tt></li>
+                    <li><tt class="text-danger">VerticalCRS</tt></li>
                 </ul>
                 <p>
-                    I'll be adding more in the next few weeks or open an issue to request a GML type to be added.
+                    The following are not being searched:
+                </p>
+                <ul>
+                    <li><tt class="text-danger">CartesianCS</tt>: used by CRSs, not searchable via an extent.</li>
+                </ul>
+                <p>
+                    I'll be working through the remaining entries in the next few weeks. If there's one you really want to see, open an issue to request it to be added.
                 </p>
                 <p>
                     The search filters are pragmatic. For example, the units <tt class="text-danger">foot</tt> and <tt class="text-danger">US survey foot</tt> are lumped into one filter. For a very precise search, try the <a href="http://www.epsg-registry.org/">EPSG Registry</a> itself.

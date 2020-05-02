@@ -15,14 +15,19 @@ It works on phones, too.
 
 Try it out at http://geodesy.appspot.com
 
-## Current Limits
+## EPSG Entries
 
-At the moment, it only displays EPSG entries of the GML types:
+At the moment, this app searches EPSG entries of the GML types:
 
-- `<gml:ProjectedCRS>`
-- `<gml:GeodeticCRS>`
+- ProjectedCRS
+- GeodeticCRS
+- VerticalCRS
 
-I'll be adding more in the next few weeks or open an issue to request a GML type to be added.
+The following are not being searched:
+
+- CartesianCS: used by CRSs, not searchable via an extent.
+
+I'll be working through the remaining entries in the next few weeks. If there's one you really want to see, open an issue to request it to be added.
 
 ## Code
 
