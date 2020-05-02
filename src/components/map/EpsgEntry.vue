@@ -54,7 +54,7 @@ the map.
                     </li>
                     <li>
                         <b>Unit:</b>
-                        {{entry.unit}}
+                        {{unitText}}
                     </li>
                     <li v-if="canReproject" class="d-none d-sm-block">
                         <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
@@ -141,6 +141,9 @@ the map.
             },
             deprecatedText() {
                 return this.entry.deprecated ? "Yes" : "No"
+            },
+            unitText() {
+                return this.entry.unit == "unknown" ? "Mixed or unknown" : this.entry.unit
             },
             canReproject() {
                 return this.entry.deprecated === false && this.entry.type == "ProjectedCRS"

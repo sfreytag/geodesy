@@ -25,10 +25,11 @@ export const store =  new Vuex.Store({
             typeProjectedCrs: true,
             typeGeodeticCrs: true,
             typeVerticalCrs: true,
+            typeCompoundCrs: true,
             unitMetre: true,
-            unitFoot: false,
-            unitDegree: false,
-            unitUnknown: false,
+            unitFoot: true,
+            unitDegree: true,
+            unitUnknown: true,
             areaMin: 0,
             areaMax: 550,
             includeWgs: true,
@@ -41,11 +42,12 @@ export const store =  new Vuex.Store({
     getters: {
         filteredResults(state) {
             return state.results.filter((r) => {
-                console.log(r.name, r.name.indexOf("WGS"))
                 const f = state.filters
                 if (!f.deprecated && r.deprecated) return false
                 if (!f.typeProjectedCrs && r.type == "ProjectedCRS") return false
                 if (!f.typeGeodeticCrs && r.type == "GeodeticCRS") return false
+                if (!f.typeVerticalCrs && r.type == "VerticalCRS") return false
+                if (!f.typeCompoundCrs && r.type == "CompoundCRS") return false
                 if (!f.unitMetre && r.unit.indexOf("metre") != -1) return false
                 if (!f.unitFoot && r.unit.indexOf("foot") != -1) return false
                 if (!f.unitDegree && r.unit.indexOf("degree") != -1) return false
@@ -96,6 +98,9 @@ export const store =  new Vuex.Store({
         },
         setTypeVerticalCrs(state, v) {
             state.filters.typeVerticalCrs = v
+        },
+        setTypeCompoundCrs(state, c) {
+            state.filters.typeCompoundCrs = c
         },
         setProjection(state, p) {
             state.projection = p
