@@ -40,26 +40,19 @@ let handlers = {
 
   // These are the GML definitions of the areas extracted in processData. As
   // such, they do not need indexing here.
-  'epsg:ExtentDefinition': definitelyHandleNoop,
+  'epsg:ExtentDefinition': handleNoop,
 
-  // The following items are data or metadata used with or by CRSs. They do not
-  // have extents. As such they are not useful for the map-based search results.
-  // The idea would be:
-  // click map -> get list of CRSs -> click thru to epsg.io -> find out about
-  // CSs, axes, etc.
-  'epsg:AxisName': definitelyHandleNoop,
-  'gml:CartesianCS': definitelyHandleNoop,
-  'gml:VerticalCS': definitelyHandleNoop,
-  'gml:EllipsoidalCS': definitelyHandleNoop,
-
-
-  // These do have domains of validity, yet to be examined in depth:
+  // Everything else is used by the CRSs and does not yet need indexing. This
+  // could change if a use case emerges where it is useful to have this data
+  // extracted to augment the CRS entries.
+  'epsg:AxisName': handleNoop,
+  'gml:CartesianCS': handleNoop,
+  'gml:VerticalCS': handleNoop,
+  'gml:EllipsoidalCS': handleNoop,
+  'gml:SphericalCS': handleNoop,
   'gml:Transformation': handleNoop,
   'gml:Conversion': handleNoop,
   'gml:ConcatenatedOperation': handleNoop,
-
-  // Not yet evaluated for usefulness
-  'gml:SphericalCS': handleNoop,
   'gml:GeodeticDatum': handleNoop,
   'gml:VerticalDatum': handleNoop,
   'gml:EngineeringDatum': handleNoop,
@@ -119,21 +112,13 @@ function handleNoop() {
 }
 
 /**
- * definitelyHandleNoop is a 'no operation' handler for the GML entries we
- * have definitely decided we don't want to index.
- */
-function definitelyHandleNoop() {
-  return false;
-}
-
-/**
  * handleProjectedCRS extracts information about projected coordinate reference
  * systems, such as EPSG:27700 the GB national grid.
  */
 function handleProjectedCRS(projectedCRS) {
   let entry = makeTemplate()
   entry.type = "ProjectedCRS"
-  entry = processCRSChildren(projectedCRS, entry)
+  entry = processChildren(projectedCRS, entry)
   entry.unit = getUnit(entry.code)
   return entry
 }
@@ -144,7 +129,7 @@ function handleProjectedCRS(projectedCRS) {
 function handleGeodeticCRS(geodeticCRS) {
   let entry = makeTemplate()
   entry.type="GeodeticCRS"
-  entry = processCRSChildren(geodeticCRS, entry)
+  entry = processChildren(geodeticCRS, entry)
   entry.unit = getUnit(entry.code)
   return entry
 }
@@ -155,7 +140,7 @@ function handleGeodeticCRS(geodeticCRS) {
 function handleVerticalCRS(verticalCRS) {
   let entry = makeTemplate()
   entry.type="VerticalCRS"
-  entry = processCRSChildren(verticalCRS, entry)
+  entry = processChildren(verticalCRS, entry)
   entry.unit = getUnit(entry.code)
   return entry
 }
@@ -166,7 +151,7 @@ function handleVerticalCRS(verticalCRS) {
 function handleCompoundCRS(compoundCRS) {
   let entry = makeTemplate()
   entry.type="CompoundCRS"
-  entry = processCRSChildren(compoundCRS, entry)
+  entry = processChildren(compoundCRS, entry)
   entry.unit = getUnit(entry.code)
   return entry
 }
@@ -177,7 +162,7 @@ function handleCompoundCRS(compoundCRS) {
 function handleEngineeringCRS(engineeringCRS) {
   let entry = makeTemplate()
   entry.type="EngineeringCRS"
-  entry = processCRSChildren(engineeringCRS, entry)
+  entry = processChildren(engineeringCRS, entry)
   entry.unit = getUnit(entry.code)
   return entry
 }
@@ -227,10 +212,10 @@ function getUnit(code) {
 }
 
 /**
- * processCRSChildren
+ * processChildren
  */
-function processCRSChildren(crs, entry) {
-  crs.children.forEach(function(child) {
+function processChildren(node, entry) {
+  node.children.forEach(function(child) {
     if (child.name == "gml:name")
       entry.name = child.children[0].text
     else if (child.name == "gml:identifier")
@@ -238,9 +223,9 @@ function processCRSChildren(crs, entry) {
     else if (child.name == "gml:domainOfValidity")
       entry.area = child.attributes['xlink:href'].split(":").pop()
     else if (child.name == "gml:metaDataProperty") {
-      // There can be two types of metadata inside gml:metaDataProperty
+      // There can be various types of metadata inside gml:metaDataProperty
+      // Only dig into epsg:CommonMetaData to look for isDeprecated
       const cmd = getChildByName(child, "epsg:CommonMetaData")
-      const crs = getChildByName(child, "epsg:CRSMetaData")
       // Only process the CommonMetaData for now
       if (cmd) {
         const isD = getChildByName(cmd, "epsg:isDeprecated")
