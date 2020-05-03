@@ -51,6 +51,11 @@ Info about the app.
                 <p>
                     Reports of any bugs, errors or feedback welcome... please open an issue at the GitHub repo: <a href="https://github.com/sfreytag/geosearch/issues">https://github.com/sfreytag/geosearch/issues</a>
                 </p>
+                <h2>Privacy and Cookies</h2>
+                <p>
+                    This app places no cookies and does not store or use any data that can identify or track you. For each map click,
+                    it does log the clicked coordinate and a timestamp. This is out of interest to see how much use the app gets.
+                </p>
                 <h2>About me</h2>
                 <p class="mb-5">
                     I'm Simon Freytag and I like building web apps, particularly those that use maps. I work freelance so if you need something similar, please <a href="http://www.freytag.org.uk">get in touch</a>.

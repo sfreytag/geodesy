@@ -45,6 +45,7 @@ map via the map wrapper.
     import Point from "ol/geom/Point"
     import Entry from "@/models/entry.js"
     import {reproject} from '@/map/projection.js'
+    import axios from 'axios'
 
     // Export the component.
     export default {
@@ -74,6 +75,7 @@ map via the map wrapper.
             onMapSingleclick(event) {
                 this.clearSearch()
                 this.updateReticle(event.coordinate)
+                this.ping(event.coordinate)
 
                 Promise.all([getTree(), getAreaIndex()]).then((data) => {
                     const tree = data[0]
@@ -109,6 +111,11 @@ map via the map wrapper.
                 rl.getSource().getFeatureById('reticle').setGeometry(
                     new Point(coord)
                 )
+            },
+            ping(coord) {
+                coord = transform(coord, 'EPSG:3857', 'EPSG:4326')
+                const c = coord[1] + "," + coord[0]
+                axios.get('/ping?c=' + c)
             },
             ...mapMutations(['clearResults', 'setResults'])
         },

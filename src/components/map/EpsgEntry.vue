@@ -17,9 +17,9 @@ the map.
                     {{entry.name}}
                 </b>
                 <br />
-                <a :href="url" target="_new" v-on:click.stop=''>
+                <span class="text-info">
                     EPSG:{{entry.code}}
-                </a>
+                </span>
                 <i>
                     {{entry.type}}
                 </i>
@@ -44,9 +44,9 @@ the map.
                     <li>
                         <b>Using area:</b>
                         {{entry.area.name}}
-                        <a :href="areaUrl" target="_new" v-on:click.stop=''>
+                        <span class="text-info">
                             EPSG:{{entry.area.code}}
-                        </a>
+                        </span>
                     </li>
                     <li>
                         <b>Deprecated:</b>
@@ -55,6 +55,16 @@ the map.
                     <li>
                         <b>Unit:</b>
                         {{unitText}}
+                    </li>
+                    <li>
+                        <b>More info:</b>
+                        <a target="_new" :href="epsgOrgLink" v-on:click.stop=''>
+                            beta.epsg.org
+                        </a>
+                        |
+                        <a target="_new" :href="epsgIoLink" v-on:click.stop=''>
+                            epsg.io
+                        </a>
                     </li>
                     <li v-if="canReproject" class="d-none d-sm-block">
                         <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
@@ -121,10 +131,10 @@ the map.
             }
         },
         computed: {
-            url() {
+            epsgIoLink() {
                 return "http://epsg.io/" + this.entry.code
             },
-            areaUrl() {
+            epsgIoAreaLink() {
                 return "http://epsg.io/" + this.entry.area.code + "-area"
             },
             extentId() {
@@ -144,6 +154,16 @@ the map.
             },
             unitText() {
                 return this.entry.unit == "unknown" ? "Mixed or unknown" : this.entry.unit
+            },
+            epsgOrgLink() {
+                return "http://beta.epsg.org/crs_"
+                    + this.entry.code
+                    + "/"
+                    + this.entry.name.toString()
+                        .replace(/\s+/g, '_')      // Replace spaces with _
+                        .replace(/[^\w-]+/g, '')       // Remove all non-word chars
+                        .replace(/__+/g, '_')         // Replace multiple - with single -
+                    + ".html"
             },
             canReproject() {
                 return this.entry.deprecated === false && this.entry.type == "ProjectedCRS"

@@ -18,13 +18,13 @@ Info about the app.
                     The EPSG Geodetic Paramter Registry is made available as a GML dictionary consisting
                     of a list of entries, each of a GML type.
                 <p>
-                    Firstly, each map click returns EPSG entries surrounding that location, which are of the GML type:
+                    Each map click returns EPSG entries surrounding that location, which are of the GML type:
                 </p>
                 <ul>
                     <li><tt class="text-danger">epsg:ExtentDefinition</tt></li>
                 </ul>
                 <p>
-                    Secondly, thee areas are used as an index to find the CRSs that use them. These are the results listed on the left and are of the following GML types:
+                    The areas are used as an index to lookup CRS for the requested location. These are the results listed on the left and are of the following GML types:
                 </p>
                 <ul>
                     <li><tt class="text-danger">gml:ProjectedCRS</tt></li>
