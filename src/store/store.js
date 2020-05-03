@@ -9,6 +9,23 @@ import Vue from 'vue'
 
 Vue.use(Vuex)
 
+const filters = {
+    deprecated: false,
+    typeProjectedCrs: true,
+    typeGeodeticCrs: true,
+    typeVerticalCrs: true,
+    typeCompoundCrs: true,
+    typeEngineeringCrs: true,
+    unitMetre: true,
+    unitFoot: true,
+    unitDegree: true,
+    unitUnknown: true,
+    areaMin: 0,
+    areaMax: 550,
+    includeWgs: true,
+    includeUtm: true,
+}
+
 export const store =  new Vuex.Store({
     state: {
         // The list of results from a spatial search
@@ -20,24 +37,11 @@ export const store =  new Vuex.Store({
         // The sort order for the EPSG Entry
         sort: 'size',
         // Filters for the results
-        filters: {
-            deprecated: false,
-            typeProjectedCrs: true,
-            typeGeodeticCrs: true,
-            typeVerticalCrs: true,
-            typeCompoundCrs: true,
-            typeEngineeringCrs: true,
-            unitMetre: true,
-            unitFoot: true,
-            unitDegree: true,
-            unitUnknown: true,
-            areaMin: 0,
-            areaMax: 550,
-            includeWgs: true,
-            includeUtm: true,
-        },
+        filters: filters,
         // The map projection code
-        projection: 'EPSG:3857'
+        projection: 'EPSG:3857',
+        // The active tab
+        tab: 'map'
     },
 
     getters: {
@@ -89,55 +93,29 @@ export const store =  new Vuex.Store({
         setSort(state, s) {
             state.sort = s
         },
-        setDeprecated(state, d) {
-            state.filters.deprecated = d
+        setTab(state, t) {
+            state.tab = t
         },
-        setTypeProjectedCrs(state, p) {
-            state.filters.typeProjectedCrs = p
-        },
-        setTypeGeodeticCrs(state, g) {
-            state.filters.typeGeodeticCrs = g
-        },
-        setTypeVerticalCrs(state, v) {
-            state.filters.typeVerticalCrs = v
-        },
-        setTypeCompoundCrs(state, c) {
-            state.filters.typeCompoundCrs = c
-        },
-        setTypeEngineeringCrs(state, e) {
-            state.filters.typeEngineeringCrs = e
-        },
-        setProjection(state, p) {
-            state.projection = p
-        },
-        setUnitFoot(state, u) {
-            state.filters.unitFoot = u
-        },
-        setUnitMetre(state, u) {
-            state.filters.unitMetre = u
-        },
-        setUnitDegree(state, u) {
-            state.filters.unitDegree = u
-        },
-        setUnitUnknown(state, u) {
-            state.filters.unitUnknown = u
-        },
-        setAreaMin(state, n) {
-            console.log('setAreaMin', n)
-            state.filters.areaMin = n
-        },
-        setAreaMax(state, n) {
-            console.log('setAreaMax', n)
-            state.filters.areaMax = n
-        },
-        setIncludeWgs(state, b) {
-            console.log('setIncludeWgs', b)
-            state.filters.includeWgs = b
-        },
-        setIncludeUtm(state, b) {
-            state.filters.includeUtm = b
-        }
+        ...makeFilterMutators()
     },
 
     actions: {}
 });
+
+function makeFilterMutators() {
+    const filterNames = Object.keys(filters)
+    let mutators = {}
+    filterNames.forEach((f) => {
+        const name = 'set' + capitalise(f)
+        mutators[name] = (state, val) => {state.filters[f] = val}
+    })
+    return mutators;
+}
+
+    /**
+     * capitalise
+     * Utility func
+     */
+    function capitalise(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    }

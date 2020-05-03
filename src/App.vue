@@ -7,9 +7,11 @@ them.
 <template>
     <div class="app-container">
 
-        <transition name="component-fade" mode="out-in">
+        <transition name="component-fade" mode="out-in"
+            v-on:after-leave="scrollTop">
             <map-tab v-if="tab == 'map'" />
             <about-tab v-if="tab == 'about'" />
+            <data-tab v-if="tab == 'data'" />
         </transition>
 
         <div class="controls-container">
@@ -67,23 +69,28 @@ them.
 </style>
 
 <script>
-    import MapTab from './components/tabs/MapTab.vue';
-    import AboutTab from './components/tabs/AboutTab.vue';
+    import MapTab from '@/components/tabs/MapTab.vue'
+    import AboutTab from '@/components/tabs/AboutTab.vue'
+    import DataTab from '@/components/tabs/DataTab.vue'
+    import {mapState, mapMutations} from 'vuex'
 
     export default {
         components: {
             'map-tab': MapTab,
             'about-tab': AboutTab,
+            'data-tab': DataTab
         },
-        data: function() {
-            return {
-                tab: 'map'
-            }
+        computed: {
+            ...mapState(['tab'])
         },
         methods: {
-            navigate: function(tab) {
-                this.tab = tab;
-            }
+            navigate(tab) {
+                this.setTab(tab);
+            },
+            scrollTop() {
+                window.scrollTo(0, 0)
+            },
+            ...mapMutations(['setTab'])
         }
     }
 </script>

@@ -10,69 +10,50 @@ Info about the app.
             </div>
         </div>
         <div class="row">
+            <div class="col">
+                <h4 class="font-weight-light my-3">
+                    Geodesy is a quick spatial search engine for the EPSG Geodetic Parameter Registry.
+                </h4>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm-8 col-xs-12 spaced">
                 <p>
-                    Geodesy is a quick spatial search engine for the EPSG Geodetic Parameter Registry.
-                </p>
-                <p>
-                    This app helps you to find useful EPSG entries around a particular location:
+                    It helps you quickly find Cordinate Reference Systems (CRS) around a particular location:
                 </p>
                 <ul>
                     <li>Click the map</li>
-                    <li>Get a list of entries immediately</li>
+                    <li>Get a list of CRS immediately</li>
                     <li>Sort and filter using some pragmatic tools</li>
-                    <li>View extents and areas rightaway</li>
+                    <li>View and compare CRS extents and areas on the same map</li>
                     <li>Reproject the map (for some CRS only)
                     <li>Click through to epsg.io for more info</li>
                 </ul>
                 <p>
-                    It works on phones, too.
+                    It works on phones, too!
                 </p>
-                <h2>EPSG Entries</h2>
+                <h2>Search filters</h2>
                 <p>
-                    At the moment, this app finds EPSG entries of the GML types:
+                    The search filters are pragmatic/fuzzy. For example, the units <tt class="text-danger">foot</tt>
+                    and <tt class="text-danger">US survey foot</tt> are lumped into one filter. This is intended to
+                    make it quicker to find things in return for an acceptable loss of precision. For a very precise
+                    search, try the <a href="http://www.epsg-registry.org/">EPSG Registry</a> itself.
                 </p>
-                <ul>
-                    <li><tt class="text-danger">gml:ProjectedCRS</tt></li>
-                    <li><tt class="text-danger">gml:GeodeticCRS</tt></li>
-                    <li><tt class="text-danger">gml:VerticalCRS</tt></li>
-                    <li><tt class="text-danger">gml:CompoundCRS</tt></li>
-                    <li><tt class="text-danger">gml:EngineeringCRS</tt></li>
-                </ul>
+                <h2>Data</h2>
                 <p>
-                    The following GML types are used by one of the CRSs returned above and/or are not
-                    directly searchable via their own extents and so are not returned in the results.
-                    To find out more about them, click the map to get a list of CRSs, then for each one,
-                    click through to epsg.io to read about the CS and axes in use.
+                    Here's
+                    <span class="text-primary text-link" v-on:click="setTab('data')">
+                        more information about the data
+                    </span>
+                    being searched by this app.
                 </p>
-                <ul>
-                    <li><tt class="text-danger">epsg:AxisName</tt></li>
-                    <li><tt class="text-danger">gml:CartesianCS</tt></li>
-                    <li><tt class="text-danger">gml:VerticalCS</tt></li>
-                    <li><tt class="text-danger">gml:EllipsoidalCS</tt></li>
-                </ul>
-                <p>
-                    The registry also contains entries for the areas of use. These are used for the
-                    spatial search tree, so as such are not directly returned in the results. However,
-                    each search result does include info about its associated area os use. The GML type
-                    this applies to is:
-                </p>
-                <ul>
-                    <li><tt class="text-danger">epsg:ExtentDefinition</tt></li>
-                </ul>
-                <p>
-                    I'll be working through the remaining entries in the next few weeks. If there's one you really want to see, open an issue to request it to be added.
-                </p>
-                <p>
-                    The search filters are pragmatic. For example, the units <tt class="text-danger">foot</tt> and <tt class="text-danger">US survey foot</tt> are lumped into one filter. For a very precise search, try the <a href="http://www.epsg-registry.org/">EPSG Registry</a> itself.
-                </p>
-                <h2>Issues and Feedback</h2>
+                <h2>Issues and feedback</h2>
                 <p>
                     Reports of any bugs, errors or feedback welcome... please open an issue at the GitHub repo: <a href="https://github.com/sfreytag/geosearch/issues">https://github.com/sfreytag/geosearch/issues</a>
                 </p>
-                <h2>About Me</h2>
-                <p>
-                    I'm Simon Freytag and I like building web apps, particularly those that use maps. I work freelance so if you need something similar, please <a href="http://www.freytag.org.uk">get in touch</a>!
+                <h2>About me</h2>
+                <p class="mb-5">
+                    I'm Simon Freytag and I like building web apps, particularly those that use maps. I work freelance so if you need something similar, please <a href="http://www.freytag.org.uk">get in touch</a>.
                 </p>
             </div>
         </div>
@@ -95,6 +76,10 @@ Info about the app.
 </style>
 
 <script>
+    import {mapMutations} from 'vuex'
     export default {
+        methods: {
+            ...mapMutations(['setTab'])
+        }
     }
 </script>
