@@ -215,7 +215,7 @@
                 this.areaMax = this.slider[1]
                 window.setTimeout(() => {
                     this.busy = false
-                }, 500)
+                }, 250)
             }
         }
     }

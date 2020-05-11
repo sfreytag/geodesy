@@ -96,6 +96,9 @@ export const store =  new Vuex.Store({
         setTab(state, t) {
             state.tab = t
         },
+        setProjection(state, p) {
+            state.projection = p
+        },
         ...makeFilterMutators()
     },
 

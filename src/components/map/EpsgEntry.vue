@@ -37,7 +37,7 @@ the map.
         </div>
         <div>
             <div class="inner">
-                <ul v-if="active">
+                <ul v-if="active" class="mb-0">
                     <li>
                         <b>Size of extent:</b> {{entry.sizeMm2}}Mm<sup>2</sup>
                     </li>
@@ -66,7 +66,9 @@ the map.
                             epsg.io
                         </a>
                     </li>
-                    <li v-if="canReproject" class="d-none d-sm-block">
+                </ul>
+                <ul v-if="active && canReproject" class="d-none d-sm-block mt-0 mb-0">
+                    <li >
                         <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
                     </li>
                 </ul>
@@ -161,8 +163,8 @@ the map.
                     + "/"
                     + this.entry.name.toString()
                         .replace(/\s+/g, '_')      // Replace spaces with _
-                        .replace(/[^\w-]+/g, '')       // Remove all non-word chars
-                        .replace(/__+/g, '_')         // Replace multiple - with single -
+                        .replace(/[^\w-]+/g, '')   // Remove all non-word chars
+                        .replace(/__+/g, '_')      // Replace multiple _ with single _
                     + ".html"
             },
             canReproject() {

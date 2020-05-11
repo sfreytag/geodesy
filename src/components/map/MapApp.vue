@@ -113,6 +113,7 @@ map via the map wrapper.
                 )
             },
             ping(coord) {
+                if (process.env.NODE_ENV != "production") return
                 coord = transform(coord, 'EPSG:3857', 'EPSG:4326')
                 const c = coord[1] + "," + coord[0]
                 axios.get('/ping?c=' + c)
