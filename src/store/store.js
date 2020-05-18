@@ -1,6 +1,6 @@
 /**
- * store.js is a VueX store, currently holding all reactuve UI state (ie, no
- * modules). There is some UI state for the map that does not need to be
+ * store.js is a VueX store, holding all reactive UI state in one place (no 
+ * modules). There is also some UI state for the map that does not need to be
  * reactive. This is stored in src/map/interface.js
  */
 
@@ -105,6 +105,11 @@ export const store =  new Vuex.Store({
     actions: {}
 });
 
+/**
+ * makeFilterMutators create a mutator method for each search filter. The
+ * methods are packaged in an object, which is spread out into the store
+ * mutations for use throughout the app.
+ */
 function makeFilterMutators() {
     const filterNames = Object.keys(filters)
     let mutators = {}
@@ -115,10 +120,9 @@ function makeFilterMutators() {
     return mutators;
 }
 
-    /**
-     * capitalise
-     * Utility func
-     */
-    function capitalise(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1)
-    }
+/**
+ * capitalise ensures the start of a string is a capital letter.
+ */
+function capitalise(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1)
+}
