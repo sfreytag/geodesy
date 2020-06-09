@@ -125,8 +125,9 @@
         bottom: 0px;
         width: 200px;
         overflow-y: scroll;
-        background-color: #ddd;
+        background-color: #c8c8c8;
         transition: left 0.5s;
+        z-index: 1;
     }
 
     .fade-enter-active, .fade-leave-active {
