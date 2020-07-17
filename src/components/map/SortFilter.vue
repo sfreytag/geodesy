@@ -202,7 +202,6 @@
             return {
                 open: false,
                 slider: [0, 550],
-                busy: false
             }
         },
         methods: {
@@ -210,13 +209,11 @@
                 this.open = !this.open
             },
             onSliderChange() {
-                if (this.busy) return
-                this.busy = true
-                this.areaMin = this.slider[0]
-                this.areaMax = this.slider[1]
-                window.setTimeout(() => {
-                    this.busy = false
-                }, 250)
+                clearTimeout(this.timeoutId);
+                this.timeoutId = window.setTimeout(() => {
+                    this.areaMin = this.slider[0]
+                    this.areaMax = this.slider[1]
+                }, 200)
             }
         }
     }
