@@ -14,7 +14,8 @@ import {get as getProjection} from 'ol/proj'
 import {getMap} from './interface.js'
 import {store} from '@/store/store.js'
 
-function reproject(code) {
+// Entry point for reprojecting the map into any EPSG code.
+export function reproject(code) {
     if (code == '3857') {
         setProjection({code})
     }
@@ -29,6 +30,7 @@ function reproject(code) {
     }
 }
 
+// Get info about a projection from epsg.io
 function searchEpsg(code) {
     let xDomain = axios.create()
     delete xDomain.defaults.headers.common['X-Requested-With']
@@ -39,6 +41,8 @@ function searchEpsg(code) {
     })
 }
 
+// Check the results of an epsg.io query to see if a valid projection exists
+// within the data.
 function findValidProj(results) {
     if (results && results.length > 0) {
         let i, result
@@ -56,6 +60,8 @@ function findValidProj(results) {
     return false
 }
 
+// Once we have a valid projection, extract the proj4 def and reproject the
+// map into it.
 function setProjection(projResult) {
     const code = projResult['code']
     const newProjCode = 'EPSG:' + code;
@@ -79,8 +85,4 @@ function setProjection(projResult) {
         projection: newProj,
         multiWorld: true
     }))
-}
-
-export {
-    reproject
 }
