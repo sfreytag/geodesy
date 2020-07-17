@@ -23,7 +23,7 @@ them in the map interface.
 <script>
     import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
     import {Vector as VectorSource} from 'ol/source'
-    import OSM from 'ol/source/OSM'
+    import BingMaps from 'ol/source/BingMaps'
     import {Map} from 'ol'
     import Attribution from 'ol/control/Attribution'
     import Feature from 'ol/Feature'
@@ -65,9 +65,10 @@ them in the map interface.
 
                 let mapLayer = new TileLayer({
                     projection: this.projection,
-                    source: new OSM(),
-                    className: 'bw-filter',
-                    opacity: 0.7
+                    source: new BingMaps({
+                        key: 'At4XyvAW75dvip5o0twwOLJ2RxFMOm9YbzyBziHZqR5nEmq07R3L_GVYfckZowam',
+                        imagerySet: 'CanvasDark'
+                    }),
                 })
 
                 const a = new Attribution({collapsible: true, collapsed: true})

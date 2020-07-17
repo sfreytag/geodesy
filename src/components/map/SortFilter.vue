@@ -14,7 +14,7 @@
 
         <div class="close btn btn-sm btn-secondary rounded-circle d-flex justify-content-center align-items-center"
             v-on:click="toggle">
-            &times;
+            <b-icon-x />
         </div>
 
         <form>
@@ -116,7 +116,6 @@
         text-shadow: none;
         width: 22px;
         height: 22px;
-        padding-top: 2px;
     }
 
     .sortFilterTray {
@@ -141,7 +140,7 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {BFormCheckbox, BFormRadio} from 'bootstrap-vue'
+    import {BFormCheckbox, BFormRadio, BIconX} from 'bootstrap-vue'
     import VueSlider from 'vue-slider-component'
 
     /**
@@ -176,9 +175,10 @@
 
     export default {
         components: {
-            'b-form-checkbox': BFormCheckbox,
-            'b-form-radio': BFormRadio,
-            'vue-slider': VueSlider
+            BFormCheckbox,
+            BFormRadio,
+            VueSlider,
+            BIconX
         },
         computed: {
             sort: {

@@ -51,7 +51,7 @@ Info about the app.
                 <p>
                     Reports of any bugs, errors or feedback welcome... please open an issue at the GitHub repo: <a href="https://github.com/sfreytag/geosearch/issues">https://github.com/sfreytag/geosearch/issues</a>
                 </p>
-                <h2>Privacy and Cookies</h2>
+                <h2>Privacy and cookies</h2>
                 <p>
                     This app places no cookies and does not store or use any data that can identify or track you. For each map click,
                     it does log the clicked coordinate and a timestamp. This is out of interest to see how much use the app gets.

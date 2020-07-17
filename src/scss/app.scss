@@ -15,17 +15,13 @@
 @import 'ol.scss';
 
 // Misc!
-// @todo Refactor somewhere tidier when there's more here.
+// @todo Refactor somewhere tidier if/when there's more here.
 *:focus {
     outline: 0 !important;
 }
 
 .text-link {
     cursor: pointer;
-}
-
-.bw-filter {
-    filter: grayscale(100%) invert(1);
 }
 
 .text-sm {

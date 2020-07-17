@@ -3,8 +3,8 @@
  * shared between all Vue components.
  *
  * The goal is not to reinvent the wheel by creating an API on top of the OL API
- * so eg rather than implement a zoomIn method here ,it is better for the
- * consuming code to access the map and the OL API from there -
+ * so for eg: rather than implement a zoomIn method here, it is better for the
+ * consuming code to access the map and use the OL API from there -
  *
  * ```
  * import {getMap} from 'map/interface.js'

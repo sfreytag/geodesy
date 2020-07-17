@@ -30,6 +30,7 @@ map via the map wrapper.
         right: 0px;
         top: 0;
         height: 44px;
+        border-top: 5px solid var(--info);
     }
 </style>
 

@@ -31,7 +31,7 @@ the map.
                 <div class="btn btn-primary rounded-circle btn-deselect d-flex justify-content-center align-items-center"
                     v-if="active"
                     v-on:click.stop="deselectEntry">
-                    &times;
+                    <b-icon-x />
                 </div>
             </div>
         </div>
@@ -68,8 +68,24 @@ the map.
                     </li>
                 </ul>
                 <ul v-if="active && canReproject" class="d-none d-sm-block mt-0 mb-0">
-                    <li >
-                        <span class="text-primary" v-on:click="reproject">Reproject map into this</span>
+                    <li v-if="!isCurrentProjection">
+                        <span v-if="reprojecting">
+                            <b-spinner small variant="secondary" class="mr-1" />Reprojecting...
+                        </span>
+                        <span class="text-primary" v-on:click="reproject" v-if="!reprojecting">
+                            Reproject map into this
+                        </span>
+                    </li>
+                    <li v-if="isCurrentProjection">
+                        <span v-if="reprojecting">
+                            <b-spinner small variant="secondary" class="mr-1" />Reprojecting...
+                        </span>
+                        <span v-if="!reprojecting">
+                            This is the current projection.
+                        </span>
+                        <span class="text-primary" v-on:click="reset" v-if="!reprojecting">
+                           Reset to EPSG:3857
+                        </span>
                     </li>
                 </ul>
                 
@@ -90,7 +106,6 @@ the map.
             width: 22px;
             height: 22px;
             padding: 0px;
-            font-size: 18px;
         }
         .inner {
             font-size: 0.85em;
@@ -118,8 +133,13 @@ the map.
     import randomColor from 'randomcolor'
     import {mapState} from 'vuex'
     import axios from 'axios'
+    import {BIconX, BSpinner} from 'bootstrap-vue'
 
     export default {
+        components: {
+            BIconX,
+            BSpinner
+        },
         props: {
             entry: Object,
         },
@@ -210,6 +230,9 @@ the map.
                         lineCap: "square"
                     })
                 })
+            },
+            isCurrentProjection() {
+                return this.entry.code == this.projection.split(":")[1]
             },
             ...mapState(['sliderSpace', 'hideAll', 'sort', 'projection'])
         },
@@ -329,6 +352,10 @@ the map.
             reproject() {
                 this.reprojecting = true
                 reproject(this.entry.code, this.extent)
+            },
+            reset() {
+                this.reprojecting = true
+                reproject('3857')
             }
         }
     }
