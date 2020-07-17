@@ -59,7 +59,7 @@ Display the list of results from a map search.
     .results {
         background-color: #aaa;
         position: absolute;
-        top: 59px;
+        top: 54px;
         bottom: 0;
         width: 306px;
         transition: left 0.5s;

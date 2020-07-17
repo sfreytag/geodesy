@@ -52,7 +52,6 @@ them.
         position: absolute;
         left: 0;
         top: 0;
-        border-top: 5px solid var(--info);
     }
 
     .component-fade-enter-active, .component-fade-leave-active {
