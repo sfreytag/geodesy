@@ -13,11 +13,11 @@ This app helps you to find useful EPSG entries around a particular location:
 
 It works on phones, too.
 
-Try it out at http://geodesy.appspot.com
+Try it out at http://geodesy.onrender.com
 
 ## EPSG Entries
 
-Click the 'About' tab on http://geodesy.appspot.com to find out which EPSG entries are
+Click the 'About' tab on http://geodesy.onrender.com to find out which EPSG entries are
 being searched, and which not.
 
 ## Code
@@ -42,5 +42,5 @@ Other NPM scripts:
 
 ## Deploy
 
-This app can be deployed to anywhere that can host a static web app. It is currently running on Google Cloud Platform.
+This app can be deployed to anywhere that can host a static web app.
 
