@@ -13,23 +13,39 @@ them in the map interface.
 
 <style lang="scss" scoped>
 
-.map, .map-container {
+.map-container {
     width: 100%;
     height: 100%;
+    
+    .map {
+        width: 100%;
+        height: 100%;
+    }
 }
 
+</style>
+
+<style lang="scss">
+.ol-layers {
+    .ol-layer:first-child {
+        filter: invert(1);
+        canvas {
+            filter: grayscale(1);
+        }
+    }
+}
 </style>
 
 <script>
     import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
     import {Vector as VectorSource} from 'ol/source'
-    import BingMaps from 'ol/source/BingMaps'
     import {Map} from 'ol'
     import Attribution from 'ol/control/Attribution'
     import Feature from 'ol/Feature'
     import Point from 'ol/geom/Point'
     import {Style, Icon} from 'ol/style'
     import {setMap, setExtentSource, setReticleLayer, origin} from '@/map/interface.js'
+    import OSM from 'ol/source/OSM.js'
 
     export default {
         mounted: function() {
@@ -65,10 +81,7 @@ them in the map interface.
 
                 let mapLayer = new TileLayer({
                     projection: this.projection,
-                    source: new BingMaps({
-                        key: 'At4XyvAW75dvip5o0twwOLJ2RxFMOm9YbzyBziHZqR5nEmq07R3L_GVYfckZowam',
-                        imagerySet: 'CanvasDark'
-                    }),
+                    source: new OSM()
                 })
 
                 const a = new Attribution({collapsible: true, collapsed: true})
